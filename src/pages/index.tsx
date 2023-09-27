@@ -7,7 +7,6 @@ function HomePage() {
   return (
     <Box>
       <Navbar />
-
       <Stack
         spacing={2}
         textAlign="center"
@@ -16,11 +15,10 @@ function HomePage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "center", 
           margin:'100px'
         }}
-      >
-        
+      >  
         <Button variant="contained" component={Link} href="/registration">
           <Typography>Sign Up</Typography>
         </Button>

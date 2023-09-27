@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Paper, Typography, TextField, Button, Box, Stack } from '@mui/material';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 
 const RegistrationPage = () => {
   const [formData, setFormData] = useState({
@@ -24,6 +25,8 @@ const RegistrationPage = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <Container
       sx={{
         height: '100vh',
@@ -93,7 +96,8 @@ const RegistrationPage = () => {
             onChange={handleChange}
             sx={{ mb: 2 }}
           />
-          <Stack>        <Button
+          <Stack>        
+          <Button
             type="submit"
             variant="contained"
             color="primary"
@@ -117,6 +121,7 @@ const RegistrationPage = () => {
         </form>
       </Paper>
     </Container>
+    </>
   );
 };
 

@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 
 const LoginPage = () => {
   const handleLogin = () => {
@@ -13,6 +14,8 @@ const LoginPage = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <Container
       sx={{
         height: '100vh',
@@ -57,6 +60,7 @@ const LoginPage = () => {
         </Button>
       </Paper>
     </Container>
+    </>
   );
 };
 
