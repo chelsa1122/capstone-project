@@ -1,127 +1,155 @@
-import React, { useState } from 'react';
-import { Container, Paper, Typography, TextField, Button, Box, Stack } from '@mui/material';
-import Link from 'next/link';
-import Navbar from '@/components/Navbar';
+import React from "react";
+import { Box, Stack } from "@mui/material";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Link from "@mui/material/Link";
+import { Grid } from "@mui/material";
+import { Google, Facebook } from "@mui/icons-material"; // Import Google and Facebook icons
 
 const RegistrationPage = () => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-  });
-
-  const handleChange = (e: { target: { name: any; value: any; }; }) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    // Handle form submission here
+  const handleLogin = () => {
+    // Implement your login logic here
+    console.log("Login button clicked");
   };
 
   return (
-    <>
-    <Navbar />
-    <Container
+    <Box
       sx={{
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: "flex",
+        alignItems: "stretch", // Stretch both sides vertically
+        height: "100vh",
+        background: "#FFC900", // Set the background color to yellow
       }}
     >
+      {/* Left Side - Yellow */}
+      <div
+        style={{
+          flex: "0 0 40%", // width of the yellow background
+        }}
+      ></div>
+
+      {/* Right Side - White with Login Form */}
       <Paper
         elevation={3}
         sx={{
-          padding: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          width: '100%',
-          maxWidth: '400px',
-        }}
+          display: "flex",
+          flexDirection: "column",
+          flex: "0 0 60%", // width of the white background
+          borderRadius: "50px 0 0 50px", 
+          backgroundColor: "white", 
+         }}
       >
-        <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
-          Register
+        <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
+        <Stack textAlign="center" sx={{ marginBottom: 5 }}>
+          <Typography variant="h5">Create Account</Typography>
+        </Stack>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+          spacing={2}
+          sx={{ marginBottom: 5 }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<Google sx={{ color: "#EB4335" }} />} // Google icon with blue color
+            sx={{
+              backgroundColor: "#FAFAFA",
+              "&:hover": {
+                backgroundColor: "#FAFAFA", // Set the hover background color to the same as normal
+              },
+            }}
+          >
+            <Typography sx={{ color: "#9E9E9E" }}>
+              Sign Up with Google
+            </Typography>
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<Facebook sx={{ color: "#1877F2" }} />}
+            sx={{
+              backgroundColor: "#FAFAFA",
+              color: "#9E9E9E",
+              "&:hover": {
+                backgroundColor: "#FAFAFA", // Set the hover background color to the same as normal
+              },
+            }}
+          >
+            Sign Up with Facebook
+          </Button>
+        </Stack>
+        <Typography textAlign="center" color="#9E9E9E" fontSize="20px">
+          --OR--
         </Typography>
-        <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+        <Stack>
           <TextField
-            name="firstName"
-            label="First Name"
-            variant="outlined"
-            fullWidth
-            required
-            margin="normal"
-            value={formData.firstName}
-            onChange={handleChange}
-            sx={{ mb: 2 }}
+            sx={{
+              marginBottom: 5,
+              marginLeft: "auto",
+              marginRight: "auto",
+              width: "50%",
+            }} // Center the text field
+            label="Full Name"
+            variant="standard"
           />
           <TextField
-            name="lastName"
-            label="Last Name"
-            variant="outlined"
-            fullWidth
-            required
-            margin="normal"
-            value={formData.lastName}
-            onChange={handleChange}
-            sx={{ mb: 2 }}
+            sx={{
+              marginBottom: 5,
+              marginLeft: "auto",
+              marginRight: "auto",
+              width: "50%",
+            }} // Center the text field
+            label="Email Address"
+            variant="standard"
           />
           <TextField
-            name="email"
-            label="Email"
-            type="email"
-            variant="outlined"
-            fullWidth
-            required
-            margin="normal"
-            value={formData.email}
-            onChange={handleChange}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            name="password"
+            sx={{
+              marginBottom: 1,
+              marginLeft: "auto",
+              marginRight: "auto",
+              width: "50%",
+            }} // Center the text field
             label="Password"
             type="password"
-            variant="outlined"
-            fullWidth
-            required
-            margin="normal"
-            value={formData.password}
-            onChange={handleChange}
-            sx={{ mb: 2 }}
+            variant="standard"
           />
-          <Stack>        
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ mt: 2 }}
-          >
-            Register
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ mt: 2 }}
-            component={Link} 
-            href="/login"
-          >
-            Login
-          </Button>
-          </Stack>
-        </form>
+        </Stack>
+        <Grid
+          container
+          sx={{ marginTop: 1, justifyContent: "center", paddingLeft: "270px" }}
+        >
+          <Grid item xs={6}>
+            <FormControlLabel control={<Checkbox />} label="Remember me" />
+          </Grid>
+          <Grid item xs={6}>
+            <Link href="#" sx={{ paddingRight: "20px" }}>
+              Forgot Password?
+            </Link>
+          </Grid>
+        </Grid>
+        <Button
+          sx={{
+            marginTop: 1,
+            marginLeft: "auto",
+            marginRight: "auto",
+            width: "50%",
+            backgroundColor: "#3F51B5",
+          }}
+          variant="contained"
+          color="primary"
+          href="/login"
+        >
+          Sign Up
+        </Button>
+        <Button>Already have an account? Log in</Button>
+        <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
       </Paper>
-    </Container>
-    </>
+    </Box>
   );
 };
 

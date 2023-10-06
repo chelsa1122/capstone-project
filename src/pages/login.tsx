@@ -44,7 +44,7 @@ const LoginPage = () => {
           flexDirection: "column",
          
           flex: "0 0 70%", // Take up 70% of the viewport width
-          borderRadius: "50px",
+          borderRadius: "50px 0 0 50px",
           backgroundColor: "white", // Set the background color to white
         }}
       >
