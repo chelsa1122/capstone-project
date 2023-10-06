@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Stack } from "@mui/material";
+import React, { useState } from "react";
+import { Box, IconButton, InputAdornment, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
@@ -8,30 +8,69 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Link from "@mui/material/Link";
 import { Grid } from "@mui/material";
-import { Google, Facebook } from "@mui/icons-material"; // Import Google and Facebook icons
+import {
+Google,
+Facebook,
+Visibility,
+VisibilityOff,
+} from "@mui/icons-material";
+import Image from "next/image";
 
 const RegistrationPage = () => {
-  const handleLogin = () => {
-    // Implement your login logic here
-    console.log("Login button clicked");
-  };
+const handleLogin = () => {
+// Implement your login logic here
+console.log("Login button clicked");
+};
 
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "stretch", // Stretch both sides vertically
-        height: "100vh",
-        background: "#FFC900", // Set the background color to yellow
-      }}
-    >
-      {/* Left Side - Yellow */}
-      <div
-        style={{
-          flex: "0 0 40%", // width of the yellow background
-        }}
-      ></div>
+const [showPassword, setShowPassword] = useState(false);
 
+const togglePasswordVisibility = () => {
+setShowPassword(!showPassword);
+};
+return (
+<Box
+sx={{
+  display: "flex",
+  alignItems: "stretch", // Stretch both sides vertically
+  height: "100vh",
+  background: "#FFC900", // Set the background color to yellow
+}}
+>
+{/* Left Side - Yellow */}
+<div
+  style={{
+    flex: "0 0 40%", // width of the yellow background
+  }}
+>
+  <Image
+    src="/images/SideLogo.svg"
+    alt="logo"
+    width={50}
+    height={40}
+    style={{
+            padding: "10px",
+          }}
+        />
+        <Stack paddingLeft={10} paddingRight={10} direction="column">
+          <Typography
+            color="#FFFFFF"
+            marginTop="20%"
+            variant="h5"
+            textAlign="left"
+          >
+            {" "}
+            🐾 Are you a dog lover? Join our pack and embark on a journey filled
+            with furry companions, wagging tails, and endless paw-sibilities!
+          </Typography>
+          <Image
+            src="/images/dog.svg"
+            alt="dog"
+            width={500}
+            height={500}
+            layout="responsive"
+          />
+        </Stack>
+      </div>
       {/* Right Side - White with Login Form */}
       <Paper
         elevation={3}
@@ -39,9 +78,9 @@ const RegistrationPage = () => {
           display: "flex",
           flexDirection: "column",
           flex: "0 0 60%", // width of the white background
-          borderRadius: "50px 0 0 50px", 
-          backgroundColor: "white", 
-         }}
+          borderRadius: "50px 0 0 50px",
+          backgroundColor: "white",
+        }}
       >
         <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
         <Stack textAlign="center" sx={{ marginBottom: 5 }}>
@@ -83,7 +122,13 @@ const RegistrationPage = () => {
             Sign Up with Facebook
           </Button>
         </Stack>
-        <Typography textAlign="center" color="#9E9E9E" fontSize="20px">
+        <Typography
+          textAlign="center"
+          color="#9E9E9E"
+          fontSize="20px"
+          marginTop={5}
+          marginBottom={5}
+        >
           --OR--
         </Typography>
         <Stack>
@@ -115,8 +160,21 @@ const RegistrationPage = () => {
               width: "50%",
             }} // Center the text field
             label="Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             variant="standard"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={togglePasswordVisibility}
+                    edge="end"
+                    sx={{ color: '"#9E9E9E' }}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </Stack>
         <Grid
@@ -146,7 +204,7 @@ const RegistrationPage = () => {
         >
           Sign Up
         </Button>
-        <Button>Already have an account? Log in</Button>
+        <Button href="/login">Already have an account? Log in</Button>
         <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
       </Paper>
     </Box>
