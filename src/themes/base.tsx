@@ -9,15 +9,15 @@ export interface ThemeConfigInterface extends ThemeOptions {
 }
 
 export const baseTheme: ThemeConfigInterface = createTheme({
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "#3F51B5",
-        },
-      },
+  palette: {
+    primary: {
+      main: "#3F51B5",
     },
-
+    secondary: {
+      main: "#FEFEFE",
+    },
+  },
+  components: {
     MuiTextField: {
       styleOverrides: {
         root: {
