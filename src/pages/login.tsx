@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -7,6 +8,7 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Link from "@mui/material/Link";
 import { Grid } from "@mui/material";
+import Image from 'next/image';
 
 const LoginPage = () => {
   const handleLogin = () => {
@@ -15,6 +17,7 @@ const LoginPage = () => {
   };
 
   return (
+   
     <Box
       sx={{
         display: "flex",
@@ -23,68 +26,77 @@ const LoginPage = () => {
         background: "#FFC900", // Set the background color to yellow
       }}
     >
+        
       {/* Left Side - Yellow */}
       <div
         style={{
           flex: "0 0 30%", // Take up 30% of the viewport width
         }}
       >
-        {/* You can add content here if needed */}
+       
       </div>
-
+     
       {/* Right Side - White with Login Form */}
       <Paper
         elevation={3}
         sx={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center", // Center horizontally
+         
           flex: "0 0 70%", // Take up 70% of the viewport width
           borderRadius: "50px",
           backgroundColor: "white", // Set the background color to white
         }}
       >
+        
         <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
-        <Typography variant="h5" gutterBottom>
+        <div style={{ textAlign:'center', marginBottom:'120px', }}>
+        <Typography variant="h5">
           Login
         </Typography>
+        <Typography variant='caption'>Please enter your login details to Sign in</Typography>
+        </div>
+       
         <TextField
-          sx={{ marginBottom: 1 }}
+          sx={{ marginBottom: 1, marginLeft: 'auto', marginRight: 'auto', width: '50%' }} // Center the text field
           label="Email"
           variant="outlined"
-          style={{ width: "50%" }}
         />
         <TextField
-          sx={{ marginBottom: 1 }}
+          sx={{ marginBottom: 1, marginLeft: 'auto', marginRight: 'auto', width: '50%' }} // Center the text field
           label="Password"
           type="password"
           variant="outlined"
-          style={{ width: "50%" }}
         />
-        <Grid container sx={{ marginTop: 1 }}>
-          <Grid item xs={6} sx={{ textAlign: "left" }}>
+        <Grid container sx={{ marginTop: 1, justifyContent: 'center', paddingLeft: "270px"  }}>
+          <Grid item xs={6}>
             <FormControlLabel
               control={<Checkbox />}
               label="Remember me"
-              sx={{ paddingLeft: "20px" }}
             />
           </Grid>
-          <Grid item xs={6} sx={{ textAlign: "right" }}>
+          <Grid item xs={6}>
             <Link href="#" sx={{ paddingRight: "20px" }}>
               Forgot Password?
             </Link>
           </Grid>
+        
         </Grid>
+      
         <Button
-          sx={{ marginTop: 1, width: "50%" }}
+          sx={{ marginTop: 1, marginLeft: 'auto', marginRight: 'auto', width: '50%' }} // Center the button
           variant="contained"
           color="primary"
           onClick={handleLogin}
         >
           Log In
         </Button>
+        <Button href="/registration" disableRipple>Sign Up Here</Button>
         <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
+        
       </Paper>
+
+     
     </Box>
   );
 };
