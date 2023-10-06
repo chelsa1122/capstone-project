@@ -16,8 +16,19 @@ export const baseTheme: ThemeConfigInterface = createTheme({
                     backgroundColor:'#3F51B5'
                 }
             }
+        },
+
+        MuiTextField:{
+            styleOverrides:{
+                root:{
+                    borderRadius:'12px'
+                }
+            }
+        },
         }
     },
+
+    
     typography:{
         fontFamily: 'Oswald, Arial, sans-serif',
     }
