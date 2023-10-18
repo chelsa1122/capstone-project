@@ -17,6 +17,38 @@ VisibilityOff,
 import Image from "next/image";
 
 const RegistrationPage = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleCreateUser = async () => {
+    const userData = {
+      name: name,
+      email: email,
+      password: password,
+    };
+
+    try {
+      const response = await fetch("/api/createUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (response.ok) {
+        console.log("User created successfully!");
+        // Redirect or perform other actions here
+      } else {
+        console.error("Failed to create user.");
+        // Handle the error accordingly
+      }
+    } catch (error) {
+      console.error("Error creating user:", error);
+      // Handle network or other errors here
+    }
+  };
 const handleLogin = () => {
 // Implement your login logic here
 console.log("Login button clicked");
