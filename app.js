@@ -22,10 +22,10 @@ import userController from './src/controllers/userController.js';
 app.use(express.static(path.join(__dirname, 'src/pages')));
 
 // Handle requests to render your index.tsx page
-app.get('/', (req, res) => {
-  // You can send your index.html file here
-  res.sendFile(path.join(__dirname, 'src/pages/index.tsx'));
-});
+// app.get('/', (req, res) => {
+//   // You can send your index.html file here
+//   res.sendFile(path.join(__dirname, 'src/pages/index.tsx'));
+// });
 
 app.use('/api', userController);
 

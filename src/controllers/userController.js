@@ -3,8 +3,8 @@ import db from '../../db.js';
 
 const router = express.Router();
 
-// Route to create a new user
-router.post('/createUser', (req, res) => {
+// Function to create a new user
+const createUser = (req, res) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
@@ -25,10 +25,10 @@ router.post('/createUser', (req, res) => {
     console.log('User inserted:', insertResult);
     return res.status(201).json({ message: 'User created successfully' });
   });
-});
+};
 
-// Route for user login
-router.post('/login', (req, res) => {
+// Function for user login
+const loginUser = (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -50,6 +50,10 @@ router.post('/login', (req, res) => {
       return res.status(401).json({ error: 'Authentication failed' });
     }
   });
-});
+};
+
+// Define the API routes
+router.post('/createUser', createUser);
+router.post('/login', loginUser);
 
 export default router;
