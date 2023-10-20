@@ -9,14 +9,16 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Link from "@mui/material/Link";
 import { Grid } from "@mui/material";
 import {
-Google,
-Facebook,
-Visibility,
-VisibilityOff,
+  Google,
+  Facebook,
+  Visibility,
+  VisibilityOff,
 } from "@mui/icons-material";
 import Image from "next/image";
+import AuthHero from "@/components/AuthHero";
 
 const RegistrationPage = () => {
+<<<<<<< HEAD
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,56 +55,29 @@ const handleLogin = () => {
 // Implement your login logic here
 console.log("Login button clicked");
 };
+=======
+  const handleLogin = () => {
+    // Implement your login logic here
+    console.log("Login button clicked");
+  };
+>>>>>>> d999c4e08266cc6a5bca9658d4877518c9ba8054
 
-const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-const togglePasswordVisibility = () => {
-setShowPassword(!showPassword);
-};
-return (
-<Box
-sx={{
-  display: "flex",
-  alignItems: "stretch", // Stretch both sides vertically
-  height: "100vh",
-  background: "#FFC900", // Set the background color to yellow
-}}
->
-{/* Left Side - Yellow */}
-<div
-  style={{
-    flex: "0 0 40%", // width of the yellow background
-  }}
->
-  <Image
-    src="/images/SideLogo.svg"
-    alt="logo"
-    width={50}
-    height={40}
-    style={{
-            padding: "10px",
-          }}
-        />
-        <Stack paddingLeft={10} paddingRight={10} direction="column">
-          <Typography
-            color="#FFFFFF"
-            marginTop="20%"
-            variant="h5"
-            textAlign="left"
-          >
-            {" "}
-            🐾 Are you a dog lover? Join our pack and embark on a journey filled
-            with furry companions, wagging tails, and endless paw-sibilities!
-          </Typography>
-          <Image
-            src="/images/dog.svg"
-            alt="dog"
-            width={500}
-            height={500}
-            layout="responsive"
-          />
-        </Stack>
-      </div>
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "stretch", // Stretch both sides vertically
+        height: "100vh",
+        background: "#FFC900", // Set the background color to yellow
+      }}
+    >
+      {/* Left Side - Yellow */}
+      <AuthHero />
       {/* Right Side - White with Login Form */}
       <Paper
         elevation={3}
@@ -127,14 +102,8 @@ sx={{
         >
           <Button
             variant="contained"
-            color="primary"
-            startIcon={<Google sx={{ color: "#EB4335" }} />} // Google icon with blue color
-            sx={{
-              backgroundColor: "#FAFAFA",
-              "&:hover": {
-                backgroundColor: "#FAFAFA", // Set the hover background color to the same as normal
-              },
-            }}
+            color="secondary"
+            startIcon={<Google sx={{ color: "#EB4335" }} />}
           >
             <Typography sx={{ color: "#9E9E9E" }}>
               Sign Up with Google
@@ -143,13 +112,6 @@ sx={{
           <Button
             variant="contained"
             startIcon={<Facebook sx={{ color: "#1877F2" }} />}
-            sx={{
-              backgroundColor: "#FAFAFA",
-              color: "#9E9E9E",
-              "&:hover": {
-                backgroundColor: "#FAFAFA", // Set the hover background color to the same as normal
-              },
-            }}
           >
             Sign Up with Facebook
           </Button>
@@ -209,9 +171,12 @@ sx={{
             }}
           />
         </Stack>
-        <Grid
-          container
-          sx={{ marginTop: 1, justifyContent: "center", paddingLeft: "270px" }}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          width="50%"
+          mx="auto"
         >
           <Grid item xs={6}>
             <FormControlLabel control={<Checkbox />} label="Remember me" />
@@ -221,7 +186,7 @@ sx={{
               Forgot Password?
             </Link>
           </Grid>
-        </Grid>
+        </Stack>
         <Button
           sx={{
             marginTop: 1,
@@ -233,7 +198,7 @@ sx={{
           variant="contained"
           color="primary"
           href="/login"
-        >
+         >
           Sign Up
         </Button>
         <Button href="/login">Already have an account? Log in</Button>
