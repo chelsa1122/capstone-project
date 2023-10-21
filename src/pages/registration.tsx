@@ -18,7 +18,7 @@ import Image from "next/image";
 import AuthHero from "@/components/AuthHero";
 
 const RegistrationPage = () => {
-<<<<<<< HEAD
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,16 +51,6 @@ const RegistrationPage = () => {
       // Handle network or other errors here
     }
   };
-const handleLogin = () => {
-// Implement your login logic here
-console.log("Login button clicked");
-};
-=======
-  const handleLogin = () => {
-    // Implement your login logic here
-    console.log("Login button clicked");
-  };
->>>>>>> d999c4e08266cc6a5bca9658d4877518c9ba8054
 
   const [showPassword, setShowPassword] = useState(false);
 

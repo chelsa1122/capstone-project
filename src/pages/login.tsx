@@ -1,21 +1,29 @@
-import React, { useState } from "react";
-import { Box, IconButton, InputAdornment, Stack } from "@mui/material";
+import AuthHero from "@/components/AuthHero";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Box, Grid, IconButton, InputAdornment, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Link from "@mui/material/Link";
-import { Grid } from "@mui/material";
-import Image from "next/image";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
-import AuthHero from "@/components/AuthHero";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { useState } from "react";
 
 const LoginPage = () => {
   const handleLogin = () => {
     // Implement your login logic here
     console.log("Login button clicked");
+    fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: "",
+        password: "",
+      }),
+    });
   };
   const [showPassword, setShowPassword] = useState(false);
 
