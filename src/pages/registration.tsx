@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, IconButton, InputAdornment, Stack } from "@mui/material";
+import { Alert, Box, IconButton, InputAdornment, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
@@ -16,40 +16,40 @@ import {
 } from "@mui/icons-material";
 import Image from "next/image";
 import AuthHero from "@/components/AuthHero";
+import { useRouter } from "next/router";
 
 const RegistrationPage = () => {
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleCreateUser = async () => {
+  const [registerStatus, setRegisterStatus] = useState<any>(null);
+  const router = useRouter();
+  const handleCreateUser = async (event) => {
+    event.preventDefault();
     const userData = {
       name: name,
       email: email,
       password: password,
     };
-
-    try {
-      const response = await fetch("/api/createUser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        console.log("User created successfully!");
-        // Redirect or perform other actions here
+    setRegisterStatus(null);
+    fetch("/api/register", {
+      body: JSON.stringify(userData),
+      method: "POST",
+    }).then((res) => {
+      if (res.status == 201) {
+        setRegisterStatus({
+          success: true,
+        });
+        router.push("/login");
       } else {
-        console.error("Failed to create user.");
-        // Handle the error accordingly
+        setRegisterStatus({
+          error: true,
+          errorDescription: "There was an error.",
+        });
       }
-    } catch (error) {
-      console.error("Error creating user:", error);
-      // Handle network or other errors here
-    }
+    });
+
+    console.log(userData);
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -78,6 +78,8 @@ const RegistrationPage = () => {
           borderRadius: "50px 0 0 50px",
           backgroundColor: "white",
         }}
+        component={"form"}
+        onSubmit={handleCreateUser}
       >
         <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
         <Stack textAlign="center" sx={{ marginBottom: 5 }}>
@@ -116,6 +118,18 @@ const RegistrationPage = () => {
           --OR--
         </Typography>
         <Stack>
+          {registerStatus && (
+            <Alert
+              sx={{
+                width: "50%",
+                mx: "auto",
+              }}
+              color={registerStatus?.error ? "error" : "success"}
+            >
+              {registerStatus?.success && "Registration successful"}
+              {registerStatus?.errorDescription}
+            </Alert>
+          )}
           <TextField
             sx={{
               marginBottom: 5,
@@ -125,6 +139,7 @@ const RegistrationPage = () => {
             }} // Center the text field
             label="Full Name"
             variant="standard"
+            onChange={(e) => setName(e.target.value)}
           />
           <TextField
             sx={{
@@ -135,6 +150,7 @@ const RegistrationPage = () => {
             }} // Center the text field
             label="Email Address"
             variant="standard"
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             sx={{
@@ -146,6 +162,7 @@ const RegistrationPage = () => {
             label="Password"
             type={showPassword ? "text" : "password"}
             variant="standard"
+            onChange={(e) => setPassword(e.target.value)}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -187,8 +204,8 @@ const RegistrationPage = () => {
           }}
           variant="contained"
           color="primary"
-          href="/login"
-         >
+          type="submit"
+        >
           Sign Up
         </Button>
         <Button href="/login">Already have an account? Log in</Button>

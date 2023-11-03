@@ -1,6 +1,13 @@
 import AuthHero from "@/components/AuthHero";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Box, Grid, IconButton, InputAdornment, Stack } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Stack,
+} from "@mui/material";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -8,24 +15,46 @@ import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginStatus, setLoginStatus] = useState<any>(null);
+  const router = useRouter();
   const handleLogin = () => {
-    // Implement your login logic here
-    console.log("Login button clicked");
+    setLoginStatus(null);
     fetch("/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: "",
-        password: "",
+        email: email,
+        password: password,
       }),
-    });
+    })
+      .then((res) => {
+        if (res.status == 200) {
+          setLoginStatus({
+            success: true,
+          });
+          router.push("/PetDetails");
+        } else
+          setLoginStatus({
+            error: true,
+            errorDescription: "Invalid email or password",
+          });
+      })
+      .catch((err) => {
+        setLoginStatus({
+          error: true,
+          errorDescription: "An unknown error occurred",
+        });
+      });
   };
-  const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -61,11 +90,24 @@ const LoginPage = () => {
               Please enter your login details to Sign in
             </Typography>
           </div>
-          <TextField label="Email" variant="outlined" />
+          {loginStatus && (
+            <Alert color={loginStatus.success ? "success" : "error"}>
+              {loginStatus.success && "Logged in successfully."}
+              {loginStatus.errorDescription}
+            </Alert>
+          )}
+          <TextField
+            label="Email"
+            variant="outlined"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <TextField
             label="Password"
             type={showPassword ? "text" : "password"}
             variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
