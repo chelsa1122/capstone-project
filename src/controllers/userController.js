@@ -1,10 +1,20 @@
 import express from 'express';
 import db from '../../db.js';
+import session from 'express-session';
 
 const router = express.Router();
 
+// Session in-memory storage  
+router.use(
+  session({
+    secret: 'PETPAL@13',
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 // Function to create a new user
 const createUser = (req, res) => {
+  console.log('Here');
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
@@ -22,6 +32,9 @@ const createUser = (req, res) => {
       return res.status(500).json({ error: 'Database error' });
     }
 
+    // Store user data in the session
+    req.session.user = user;
+
     console.log('User inserted:', insertResult);
     return res.status(201).json({ message: 'User created successfully' });
   });
@@ -35,6 +48,11 @@ const loginUser = (req, res) => {
     return res.status(400).json({ error: 'Email and password are required' });
   }
 
+  if (req.session.user) {
+    // User is already logged in
+    return res.status(200).json({ message: 'Already logged in' });
+  }
+
   const loginQuery = 'SELECT * FROM user WHERE email = ? AND password = ?';
   const loginValues = [email, password];
 
@@ -45,6 +63,9 @@ const loginUser = (req, res) => {
     }
 
     if (loginResults.length === 1) {
+      // Store user data in the session
+      req.session.user = loginResults[0];
+
       return res.status(200).json({ message: 'Login successful' });
     } else {
       return res.status(401).json({ error: 'Authentication failed' });
@@ -52,8 +73,42 @@ const loginUser = (req, res) => {
   });
 };
 
+// Function to update user information
+const updateUser = (req, res) => {
+
+  // Ensure the user is authenticated
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+
+  const { name, email, password, age, address } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+
+  const updateQuery = 'UPDATE user SET name = ?, password = ?, age = ?, address = ? WHERE email = ?';
+  const updateValues = [name, password, age, address, email];
+
+  db.query(updateQuery, updateValues, (updateError, updateResult) => {
+    if (updateError) {
+      console.error('Error updating user:', updateError);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (updateResult.affectedRows === 1) {
+      return res.status(200).json({ message: 'User information updated successfully' });
+    } else {
+      return res.status(404).json({ error: 'User not found' });
+    }
+  });
+};
+
+
+
 // Define the API routes
 router.post('/createUser', createUser);
 router.post('/login', loginUser);
+router.put('/updateUser', updateUser);
 
 export default router;

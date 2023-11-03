@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session';
 import path from 'path';
 
 import bodyParser from 'body-parser'; 
@@ -8,6 +9,14 @@ const router = express.Router();
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+
+app.use(
+  session({
+    secret: 'PETPAL@3',
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'src/pages')));
 //   // You can send your index.html file here
 //   res.sendFile(path.join(__dirname, 'src/pages/index.tsx'));
 // });
+
 
 app.use('/api', userController);
 

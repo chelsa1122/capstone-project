@@ -1,0 +1,144 @@
+import express from 'express';
+import db from '../../db.js';
+import session from 'express-session';
+
+const router = express.Router();
+
+// Function to create a new pet detail
+const createPetDetail = (req, res) => {
+  const { name, dateOfBirth, weight } = req.body;
+
+  if (!name || !dateOfBirth || !weight) {
+    return res.status(400).json({ error: 'Name, date of birth, and weight are required' });
+  }
+
+  // Assuming there's a 'user_id' in the session representing the logged-in user
+  const userId = req.session.user.user_id;
+
+  const insertQuery = 'INSERT INTO pet_details (user_id, name, date_of_birth, weight) VALUES (?, ?, ?, ?)';
+  const insertValues = [userId, name, dateOfBirth, weight];
+
+  db.query(insertQuery, insertValues, (insertError, insertResult) => {
+    if (insertError) {
+      console.error('Error inserting pet detail:', insertError);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    console.log('Pet detail inserted:', insertResult);
+    return res.status(201).json({ message: 'Pet detail created successfully' });
+  });
+};
+
+// Function to retrieve pet details
+const getPetDetails = (req, res) => {
+  // Assuming there's a 'user_id' in the session representing the logged-in user
+  const userId = req.session.user.user_id;
+
+  const selectQuery = 'SELECT * FROM pet_details WHERE user_id = ?';
+  const selectValues = [userId];
+
+  db.query(selectQuery, selectValues, (selectError, selectResults) => {
+    if (selectError) {
+      console.error('Error retrieving pet details:', selectError);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    return res.status(200).json(selectResults);
+  });
+};
+
+// Function to delete a pet detail
+const deletePetDetail = (req, res) => {
+  // Assuming there's a 'user_id' in the session representing the logged-in user
+  const userId = req.session.user.user_id;
+
+  // Assuming there's a 'pet_id' provided in the request to identify the pet detail to delete
+  const petId = req.body.pet_id;
+
+  if (!petId) {
+    return res.status(400).json({ error: 'Pet ID is required' });
+  }
+
+  const deleteQuery = 'DELETE FROM pet_details WHERE user_id = ? AND pet_id = ?';
+  const deleteValues = [userId, petId];
+
+  db.query(deleteQuery, deleteValues, (deleteError, deleteResult) => {
+    if (deleteError) {
+      console.error('Error deleting pet detail:', deleteError);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (deleteResult.affectedRows === 1) {
+      return res.status(200).json({ message: 'Pet detail deleted successfully' });
+    } else {
+      return res.status(404).json({ error: 'Pet detail not found' });
+    }
+  });
+};
+
+// Function to update pet details
+const updatePetDetails = (req, res) => {
+  const { name, dateOfBirth, weight } = req.body;
+
+  if (!name && !dateOfBirth && !weight) {
+    return res.status(400).json({ error: 'No fields to update provided' });
+  }
+
+  // Assuming there's a 'user_id' in the session representing the logged-in user
+  const userId = req.session.user.user_id;
+
+  // Assuming there's a 'pet_id' provided in the request to identify the pet detail to update
+  const petId = req.body.pet_id;
+
+  if (!petId) {
+    return res.status(400).json({ error: 'Pet ID is required' });
+  }
+
+  const updateValues = [];
+
+  let updateQuery = 'UPDATE pet_details SET ';
+
+  if (name) {
+    updateQuery += 'name = ?, ';
+    updateValues.push(name);
+  }
+
+  if (dateOfBirth) {
+    updateQuery += 'date_of_birth = ?, ';
+    updateValues.push(dateOfBirth);
+  }
+
+  if (weight) {
+    updateQuery += 'weight = ?, ';
+    updateValues.push(weight);
+  }
+
+  updateQuery = updateQuery.slice(0, -2); // Remove the trailing comma and space
+  updateQuery += ' WHERE user_id = ? AND pet_id = ?';
+  updateValues.push(userId, petId);
+
+  if (updateValues.length === 2) {
+    return res.status(400).json({ error: 'No valid fields to update provided' });
+  }
+
+  db.query(updateQuery, updateValues, (updateError, updateResult) => {
+    if (updateError) {
+      console.error('Error updating pet details:', updateError);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (updateResult.affectedRows === 1) {
+      return res.status(200).json({ message: 'Pet details updated successfully' });
+    } else {
+      return res.status(404).json({ error: 'Pet not found' });
+    }
+  });
+};
+
+// Define the API routes for pet details
+router.post('/createPetDetail', createPetDetail);
+router.get('/getPetDetails', getPetDetails);
+router.delete('/deletePetDetail', deletePetDetail);
+router.put('/updatePetDetails', updatePetDetails);
+
+export default router;
