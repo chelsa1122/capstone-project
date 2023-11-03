@@ -6,17 +6,20 @@ const router = express.Router();
 
 // Function to create a new pet detail
 const createPetDetail = (req, res) => {
-  const { name, dateOfBirth, weight } = req.body;
+  const { name, dob, weight } = req.body;
 
-  if (!name || !dateOfBirth || !weight) {
+  if (!name || !dob || !weight) {
     return res.status(400).json({ error: 'Name, date of birth, and weight are required' });
   }
-
+console.log(name,dob,weight);
   // Assuming there's a 'user_id' in the session representing the logged-in user
-  const userId = req.session.user.user_id;
+//   const userId = req.session.user.user_id;
 
-  const insertQuery = 'INSERT INTO pet_details (user_id, name, date_of_birth, weight) VALUES (?, ?, ?, ?)';
-  const insertValues = [userId, name, dateOfBirth, weight];
+  //for testing
+  const userId = 1;
+
+  const insertQuery = 'INSERT INTO pets (user_id, name, dob, weight) VALUES (?, ?, ?, ?)';
+  const insertValues = [userId, name, dob, weight];
 
   db.query(insertQuery, insertValues, (insertError, insertResult) => {
     if (insertError) {
@@ -34,7 +37,7 @@ const getPetDetails = (req, res) => {
   // Assuming there's a 'user_id' in the session representing the logged-in user
   const userId = req.session.user.user_id;
 
-  const selectQuery = 'SELECT * FROM pet_details WHERE user_id = ?';
+  const selectQuery = 'SELECT * FROM pets WHERE user_id = ?';
   const selectValues = [userId];
 
   db.query(selectQuery, selectValues, (selectError, selectResults) => {
@@ -59,7 +62,7 @@ const deletePetDetail = (req, res) => {
     return res.status(400).json({ error: 'Pet ID is required' });
   }
 
-  const deleteQuery = 'DELETE FROM pet_details WHERE user_id = ? AND pet_id = ?';
+  const deleteQuery = 'DELETE FROM pets WHERE user_id = ? AND pet_id = ?';
   const deleteValues = [userId, petId];
 
   db.query(deleteQuery, deleteValues, (deleteError, deleteResult) => {
@@ -78,9 +81,9 @@ const deletePetDetail = (req, res) => {
 
 // Function to update pet details
 const updatePetDetails = (req, res) => {
-  const { name, dateOfBirth, weight } = req.body;
+  const { name, dob, weight } = req.body;
 
-  if (!name && !dateOfBirth && !weight) {
+  if (!name && !dob && !weight) {
     return res.status(400).json({ error: 'No fields to update provided' });
   }
 
@@ -96,16 +99,16 @@ const updatePetDetails = (req, res) => {
 
   const updateValues = [];
 
-  let updateQuery = 'UPDATE pet_details SET ';
+  let updateQuery = 'UPDATE pets SET ';
 
   if (name) {
     updateQuery += 'name = ?, ';
     updateValues.push(name);
   }
 
-  if (dateOfBirth) {
-    updateQuery += 'date_of_birth = ?, ';
-    updateValues.push(dateOfBirth);
+  if (dob) {
+    updateQuery += 'dob = ?, ';
+    updateValues.push(dob);
   }
 
   if (weight) {
