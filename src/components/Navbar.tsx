@@ -14,12 +14,14 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const router = useRouter();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -27,6 +29,11 @@ const Navbar = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
+    router.push("/login");
   };
 
   return (
@@ -90,7 +97,7 @@ const Navbar = () => {
             onClose={handleClose}
           >
             {settings.map((setting, index) => (
-              <MenuItem key={index} onClick={handleClose}>
+              <MenuItem key={index} onClick={setting === "Logout" ? handleLogout : handleClose}>
                 {setting}
               </MenuItem>
             ))}
