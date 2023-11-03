@@ -1,8 +1,8 @@
 import express from 'express';
 import session from 'express-session';
 import path from 'path';
-
-import bodyParser from 'body-parser'; 
+import bodyParser from 'body-parser';
+import cors from 'cors';
 
 const app = express();
 const router = express.Router();
@@ -12,7 +12,7 @@ import { dirname } from 'path';
 
 app.use(
   session({
-    secret: 'PETPAL@3',
+    secret: 'secret',
     resave: false,
     saveUninitialized: true,
   })
@@ -25,7 +25,10 @@ app.use(bodyParser.json());
 
 // Import your userController as an ES module
 import userController from './src/controllers/userController.js';
+import petController from './src/controllers/petController.js';
 
+// cors for requests
+app.use(cors());
 
 // Serve your static files (e.g., your frontend build)
 app.use(express.static(path.join(__dirname, 'src/pages')));
@@ -38,6 +41,7 @@ app.use(express.static(path.join(__dirname, 'src/pages')));
 
 
 app.use('/api', userController);
+app.use('/api', petController);
 
 const port = process.env.PORT || 3000;
 
