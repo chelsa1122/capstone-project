@@ -16,10 +16,15 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
+import { useTheme } from "@mui/material/styles";
 
 function PetDetails() {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
+
   const canadianProvinces = [
     "Alberta",
     "British Columbia",
@@ -124,7 +129,7 @@ function PetDetails() {
       <Navbar />
 
       <Grid item md={6} xs={12}>
-        <Stack p={{ xs: 2, md: 10 }}>
+        <Stack p={matches ? 10 : 2}>
           <Typography fontWeight="bold" mt={4} variant="h4">
             Hello User, Welcome To HelloDoGGo!
           </Typography>
@@ -133,7 +138,7 @@ function PetDetails() {
           </Typography>
 
           <Stack>
-            <Typography mt={{ xs: 2, md: 3 }}>
+            <Typography mt={matches ? 3 : 2}>
               What brings you to HelloDogGo?
               <span style={{ color: "#424242" }}>(Select all that apply)</span>
             </Typography>
@@ -150,7 +155,7 @@ function PetDetails() {
             </FormGroup>
           </Stack>
 
-          <Stack mt={2} spacing={{ xs: 1, md: 2 }}>
+          <Stack mt={2} spacing={matches ? 2 : 1}>
             <Typography>Pet Name</Typography>
             <TextField label="Enter pet's name" variant="outlined" />
 
@@ -184,13 +189,13 @@ function PetDetails() {
             <Typography>Birthday</Typography>
 
             <Stack
-              spacing={{ xs: 1, md: 3 }}
-              direction={{ xs: "column", md: "row" }}
+              spacing={matches ? 3 : 1}
+              direction={matches ? "row" : "column"}
             >
               <Select
                 placeholder="Select Year"
                 variant="outlined"
-                fullWidth={{ xs: true, md: false }}
+                fullWidth={!matches}
               >
                 {years.map((year) => (
                   <MenuItem key={year} value={year}>
@@ -201,7 +206,7 @@ function PetDetails() {
               <Select
                 placeholder="Select Month"
                 variant="outlined"
-                fullWidth={{ xs: true, md: false }}
+                fullWidth={!matches}
               >
                 {months.map((month) => (
                   <MenuItem key={month} value={month}>
@@ -212,7 +217,7 @@ function PetDetails() {
               <Select
                 placeholder="Select Day"
                 variant="outlined"
-                fullWidth={{ xs: true, md: false }}
+                fullWidth={!matches}
               >
                 {days.map((day) => (
                   <MenuItem key={day} value={day}>
