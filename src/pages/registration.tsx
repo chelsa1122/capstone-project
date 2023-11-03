@@ -17,6 +17,7 @@ import {
 import Image from "next/image";
 import AuthHero from "@/components/AuthHero";
 import { useRouter } from "next/router";
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const RegistrationPage = () => {
   const [name, setName] = useState("");
@@ -24,7 +25,9 @@ const RegistrationPage = () => {
   const [password, setPassword] = useState("");
   const [registerStatus, setRegisterStatus] = useState<any>(null);
   const router = useRouter();
-  const handleCreateUser = async (event) => {
+  const matches = useMediaQuery('(min-width:600px)');
+  
+  const handleCreateUser = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     const userData = {
       name: name,
@@ -61,6 +64,7 @@ const RegistrationPage = () => {
     <Box
       sx={{
         display: "flex",
+        flexDirection: matches ? "row" : "column",
         alignItems: "stretch", // Stretch both sides vertically
         height: "100vh",
         background: "#FFC900", // Set the background color to yellow
@@ -74,8 +78,8 @@ const RegistrationPage = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          flex: "0 0 60%", // width of the white background
-          borderRadius: "50px 0 0 50px",
+          flex: matches ? "0 0 60%" : "0 0 100%", // width of the white background
+          borderRadius: matches ? "50px 0 0 50px" : "0px",
           backgroundColor: "white",
         }}
         component={"form"}
@@ -86,7 +90,7 @@ const RegistrationPage = () => {
           <Typography variant="h5">Create Account</Typography>
         </Stack>
         <Stack
-          direction="row"
+          direction={matches ? "row" : "column"}
           alignItems="center"
           justifyContent="center"
           spacing={2}

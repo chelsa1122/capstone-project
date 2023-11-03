@@ -7,6 +7,7 @@ import {
   IconButton,
   InputAdornment,
   Stack,
+  useMediaQuery,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -24,6 +25,8 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginStatus, setLoginStatus] = useState<any>(null);
   const router = useRouter();
+  const matches = useMediaQuery('(min-width:600px)');
+
   const handleLogin = () => {
     setLoginStatus(null);
     fetch("/api/login", {
@@ -64,6 +67,7 @@ const LoginPage = () => {
     <Box
       sx={{
         display: "flex",
+        flexDirection: matches ? "row" : "column",
         alignItems: "stretch", // Stretch both sides vertically
         height: "100vh",
         background: "#FFC900", // Set the background color to yellow
@@ -77,13 +81,13 @@ const LoginPage = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          flex: "0 0 60%", // Take up 70% of the viewport width
-          borderRadius: "50px 0 0 50px",
+          flex: matches ? "0 0 60%" : "1 0 auto", // Take up 70% of the viewport width on desktop, auto on mobile
+          borderRadius: matches ? "50px 0 0 50px" : "0",
           backgroundColor: "white", // Set the background color to white
         }}
       >
         <div style={{ flex: 1 }} />
-        <Stack gap={2} mx="auto" width="50%">
+        <Stack gap={2} mx="auto" width={matches ? "50%" : "80%"}>
           <div style={{ textAlign: "center" }}>
             <Typography variant="h5">Login</Typography>
             <Typography variant="caption">
@@ -123,7 +127,7 @@ const LoginPage = () => {
             }}
           />
           <Stack
-            direction="row"
+            direction={matches ? "row" : "column"}
             alignItems="center"
             justifyContent="space-between"
           >
