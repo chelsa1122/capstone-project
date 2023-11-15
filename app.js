@@ -40,6 +40,24 @@ app.use(express.static(path.join(__dirname, 'src/pages')));
 // });
 
 
+//testing data
+app.use(cors());
+
+// Sample data (replace with your own data source)
+const items = [
+  { id: 1, name: 'Item 1' },
+  { id: 2, name: 'Item 2' },
+  { id: 3, name: 'Item 3' },
+];
+
+app.get('/api/items', (req, res) => {
+  res.json(items);
+});
+
+app.get('/api/users', (req, res) => {
+  userController.getUserData(req, res); // Call the function 
+});
+
 app.use('/api', userController);
 app.use('/api', petController);
 

@@ -1,8 +1,32 @@
 import express from 'express';
 import db from '../../db.js';
 import session from 'express-session';
+import fetch from 'node-fetch';
 
 const router = express.Router();
+const API_URL = 'http://localhost:3000/api/items';
+
+
+const getUserData = (req, res) => {
+  console.log('into userdata');
+  const query = 'SELECT * FROM users'; 
+
+  db.query(query, (error, results) => {
+
+    console.log(results);
+    if (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      console.log(results);
+      res.json(results);
+    }
+  });
+};
+
+export { getUserData };
+
+
 
 // Session in-memory storage  
 router.use(

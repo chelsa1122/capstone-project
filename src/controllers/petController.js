@@ -35,7 +35,9 @@ console.log(name,dob,weight);
 // Function to retrieve pet details
 const getPetDetails = (req, res) => {
   // Assuming there's a 'user_id' in the session representing the logged-in user
-  const userId = req.session.user.user_id;
+//   const userId = req.session.user.user_id;
+//for testing
+const userId = 1;
 
   const selectQuery = 'SELECT * FROM pets WHERE user_id = ?';
   const selectValues = [userId];
@@ -88,7 +90,8 @@ const updatePetDetails = (req, res) => {
   }
 
   // Assuming there's a 'user_id' in the session representing the logged-in user
-  const userId = req.session.user.user_id;
+//   const userId = req.session.user.user_id;
+  const userId = 1;
 
   // Assuming there's a 'pet_id' provided in the request to identify the pet detail to update
   const petId = req.body.pet_id;
@@ -117,7 +120,7 @@ const updatePetDetails = (req, res) => {
   }
 
   updateQuery = updateQuery.slice(0, -2); // Remove the trailing comma and space
-  updateQuery += ' WHERE user_id = ? AND pet_id = ?';
+  updateQuery += ' WHERE user_id = ? AND id = ?';
   updateValues.push(userId, petId);
 
   if (updateValues.length === 2) {

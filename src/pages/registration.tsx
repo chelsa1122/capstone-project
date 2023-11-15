@@ -19,6 +19,7 @@ import AuthHero from "@/components/AuthHero";
 import { useRouter } from "next/router";
 import useMediaQuery from '@mui/material/useMediaQuery';
 
+
 const RegistrationPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ const RegistrationPage = () => {
   const router = useRouter();
   const matches = useMediaQuery('(min-width:600px)');
   
-  const handleCreateUser = async (event: { preventDefault: () => void; }) => {
+  const handleCreateUser = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     const userData = {
       name: name,
@@ -35,25 +36,37 @@ const RegistrationPage = () => {
       password: password,
     };
     setRegisterStatus(null);
-    fetch("/api/register", {
-      body: JSON.stringify(userData),
-      method: "POST",
-    }).then((res) => {
-      if (res.status == 201) {
+
+    try {
+      const response = await fetch("/api/createUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (response.status === 201) {
         setRegisterStatus({
           success: true,
         });
         router.push("/login");
       } else {
+        const data = await response.json();
         setRegisterStatus({
           error: true,
-          errorDescription: "There was an error.",
+          errorDescription: data.error || "There was an error.",
         });
       }
-    });
-
-    console.log(userData);
+    } catch (error) {
+      console.error("Error creating user:", error);
+      setRegisterStatus({
+        error: true,
+        errorDescription: "There was an error.",
+      });
+    }
   };
+  
 
   const [showPassword, setShowPassword] = useState(false);
 

@@ -17,10 +17,10 @@ export default function register(req: NextApiRequest, res: NextApiResponse) {
     "INSERT INTO user (name, email, password) VALUES (?, ?, ?)";
   const insertValues = [user.name, user.email, user.password];
 
-  db.query(insertQuery, insertValues, (insertError, insertResult) => {
+  db.query(insertQuery, insertValues, (insertError: Error | null, insertResult: any) => {
     if (insertError) {
-      console.error("Error inserting user:", insertError);
-      return res.status(500).json({ error: "Database error" });
+      console.error('Error inserting user:', insertError);
+      return res.status(500).json({ error: 'Database error' });
     }
 
     console.log("User inserted:", insertResult);
