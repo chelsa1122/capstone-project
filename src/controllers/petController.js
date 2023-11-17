@@ -13,10 +13,10 @@ const createPetDetail = (req, res) => {
   }
 console.log(name,dob,weight);
   // Assuming there's a 'user_id' in the session representing the logged-in user
-//   const userId = req.session.user.user_id;
+  const userId = req.session.user.user_id;
 
   //for testing
-  const userId = 1;
+  // const userId = 1;
 
   const insertQuery = 'INSERT INTO pets (user_id, name, dob, weight) VALUES (?, ?, ?, ?)';
   const insertValues = [userId, name, dob, weight];
@@ -35,9 +35,7 @@ console.log(name,dob,weight);
 // Function to retrieve pet details
 const getPetDetails = (req, res) => {
   // Assuming there's a 'user_id' in the session representing the logged-in user
-//   const userId = req.session.user.user_id;
-//for testing
-const userId = 1;
+  const userId = req.session.user.user_id;
 
   const selectQuery = 'SELECT * FROM pets WHERE user_id = ?';
   const selectValues = [userId];
@@ -90,8 +88,8 @@ const updatePetDetails = (req, res) => {
   }
 
   // Assuming there's a 'user_id' in the session representing the logged-in user
-//   const userId = req.session.user.user_id;
-  const userId = 1;
+  const userId = req.session.user.user_id;
+  // const userId = 1;
 
   // Assuming there's a 'pet_id' provided in the request to identify the pet detail to update
   const petId = req.body.pet_id;

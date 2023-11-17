@@ -27,7 +27,6 @@ const getUserData = (req, res) => {
 export { getUserData };
 
 
-
 // Session in-memory storage  
 router.use(
   session({
