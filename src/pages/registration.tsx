@@ -36,17 +36,11 @@ const RegistrationPage = () => {
       password: password,
     };
     setRegisterStatus(null);
-
-    try {
-      const response = await fetch("/api/createUser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.status === 201) {
+    fetch("http://localhost:3001/api/createUser", {
+      body: JSON.stringify(userData),
+      method: "POST",
+    }).then((res) => {
+      if (res.status == 201) {
         setRegisterStatus({
           success: true,
         });

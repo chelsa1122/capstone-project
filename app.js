@@ -61,7 +61,7 @@ app.get('/api/users', (req, res) => {
 app.use('/api', userController);
 app.use('/api', petController);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

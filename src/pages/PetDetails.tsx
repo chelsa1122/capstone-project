@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -20,10 +20,21 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
+import axios from 'axios';
 
 function PetDetails() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
+
+  const [pets, setPets] = useState([]);
+
+  useEffect(() => {
+    const fetchPets = async () => {
+      const res = await axios.get('http://localhost:3001/api/getPetDetails');
+      setPets(res.data);
+    };
+    fetchPets();
+  }, []);
 
   const canadianProvinces = [
     "Alberta",
@@ -118,11 +129,13 @@ function PetDetails() {
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
 
-  const handleStateChange = (event) => {
+  const handleStateChange = (event: { target: { value: any; }; }) => {
     const newState = event.target.value;
     setSelectedState(newState);
     setSelectedCity("");
   };
+
+  
 
   return (
     <Grid container>
