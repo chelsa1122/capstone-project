@@ -18,9 +18,9 @@ const StyledRating = styled(Rating)({
   "& .MuiRating-iconFilled": {
     color: "#ff6d75",
   },
-  "& .MuiRating-iconHover": {
-    color: "#ff3d47",
-  },
+//   "& .MuiRating-iconHover": {
+//     color: "#ff3d47",
+//   },
 });
 function Homepage() {
   const value = 5;
@@ -110,7 +110,7 @@ function Homepage() {
           sx={{
             display: "flex",
             maxWidth: { xs: "90%", md: "80%" },
-            flexDirection: { xs: "column", md: "row" }, // Change flex direction based on screen size
+            flexDirection: { xs: "column", md: "row" },
 
             mt: 5,
             mb: 5,
@@ -151,7 +151,7 @@ function Homepage() {
             component="img"
             sx={{ width: { md: "50%", xs: "100%" } }}
             image="/Images/CardImage.svg"
-            alt="Live from space album cover"
+            alt="CardImage"
           />
         </Card>
       </Stack>
