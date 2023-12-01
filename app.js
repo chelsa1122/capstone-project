@@ -8,6 +8,7 @@ const app = express();
 const router = express.Router();
 
 import { fileURLToPath } from 'url';
+import servicesController from './src/controllers/servicesController.js'
 import { dirname } from 'path';
 
 app.use(
@@ -60,6 +61,7 @@ app.get('/api/users', (req, res) => {
 
 app.use('/api', userController);
 app.use('/api', petController);
+app.use('/api', servicesController);
 
 const port = process.env.PORT || 3001;
 

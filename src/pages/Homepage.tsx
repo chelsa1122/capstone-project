@@ -43,6 +43,20 @@ function Homepage() {
     // fetch searchbar data
     const { Address, PetService, Date, PetNumber } = formValues;
     console.log(Address, PetService, Date, PetNumber);
+
+    fetch('http://localhost:3001/api/services/waterloo', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle the data from the response
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   };
 
   const handleInputChange = (e) => {
