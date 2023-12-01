@@ -29,4 +29,5 @@ export const baseTheme: ThemeConfigInterface = createTheme({
   typography: {
     fontFamily: "Oswald, Arial, sans-serif",
   },
+  
 });

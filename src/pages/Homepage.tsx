@@ -1,34 +1,132 @@
+import React, { useState } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardMedia,
   Chip,
   Grid,
+  IconButton,
   Rating,
   Stack,
+  TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Footer from "./Footer";
+import { Search } from "@mui/icons-material";
+import Navbar from "@/components/Navbar";
 
 const StyledRating = styled(Rating)({
   "& .MuiRating-iconFilled": {
     color: "#ff6d75",
   },
-//   "& .MuiRating-iconHover": {
-//     color: "#ff3d47",
-//   },
+  //   "& .MuiRating-iconHover": {
+  //     color: "#ff3d47",
+  //   },
 });
 function Homepage() {
-  const value = 5;
+  const [formValues, setFormValues] = useState({
+    Address: "",
+    PetService: "",
+    Date: "",
+    PetNumber: "",
+  });
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    // fetch searchbar data
+    const { Address, PetService, Date, PetNumber } = formValues;
+    console.log(Address, PetService, Date, PetNumber);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
 
   return (
     <>
-      <Stack spacing={2}>
-        <img src="/Images/HomePage_Img.svg" />
+      <Navbar />
+      <Stack justifyContent="center" alignItems="center">
+        <img src="/Images/HomePage_Img.svg" width="100%" alt="HomePage Image" />
+
+        <Box
+          sx={{
+            backgroundColor: "#FAFAFA",
+            borderRadius: 2,
+            mt: -5,
+            p: 2,
+            maxWidth: "md",
+            mx: "auto",
+          }}
+        >
+          <form onSubmit={handleFormSubmit}>
+            <Grid
+              container
+              spacing={3}
+              justifyContent="center"
+              alignItems="center"
+             // component="form"
+            >
+              <Grid item xs={12} md={3} display="flex" flexDirection="column">
+                <Typography>Location</Typography>
+                <TextField
+                  name="Address"
+                  placeholder="Enter address or suburb"
+                  value={formValues.Address}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.5} display="flex" flexDirection="column">
+                <Typography>Service</Typography>
+                <TextField
+                  name="PetService"
+                  placeholder="Choose a pet service"
+                  value={formValues.PetService}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.5} display="flex" flexDirection="column">
+                <Typography>Dates</Typography>
+                <TextField
+                  name="Date"
+                  placeholder="Add Date"
+                  value={formValues.Date}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.5} display="flex" flexDirection="column">
+                <Typography>Pets</Typography>
+                <TextField
+                  name="PetNumber"
+                  placeholder="How many pets?"
+                  value={formValues.PetNumber}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} alignItems="center" md={1} display="flex" flexDirection="column">
+                {!isSmallScreen ? (
+                  <IconButton type="submit" size="large" sx={{ backgroundColor: "#3F51B5" }}>
+                    <Search sx={{ color: "white" }} />
+                  </IconButton>
+                ) : (
+                  <Button variant="contained" type="submit" color="primary">
+                    Search
+                  </Button>
+                )}
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
       </Stack>
 
       <Stack alignItems="center" mt={5}>
@@ -141,7 +239,7 @@ function Homepage() {
             <StyledRating
               defaultValue={5}
               name="read-only"
-              value={value}
+              // value={value}
               readOnly
               icon={<FavoriteIcon fontSize="inherit" />}
               emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
