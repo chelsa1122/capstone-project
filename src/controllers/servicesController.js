@@ -6,7 +6,7 @@ const router = express.Router();
 // Function to get services available for pets in a specific location
 const getServicesByLocation = (req, res) => {
   // Extract location from request parameters or query string
-  const service_location = req.params.location || req.query.location;
+  const location = req.params.location || req.query.location;
   const pet = req.params.location || req.query.location;
   const service = req.params.location || req.query.location;
 
@@ -15,7 +15,7 @@ const getServicesByLocation = (req, res) => {
   // }
 
   // Query to get services based on the location
-  const query = 'SELECT * FROM services WHERE';
+  let query = 'SELECT * FROM services WHERE';
 
   if (location && pet && service) {
     query += ' service_location = ? AND pet = ? AND service = ?';
