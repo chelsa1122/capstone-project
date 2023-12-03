@@ -7,9 +7,10 @@ const router = express.Router();
 const getServicesByLocation = (req, res) => {
   // Extract location from request parameters or query string
   const location = req.params.location || req.query.location;
-  const pet = req.params.location || req.query.location;
-  const service = req.params.location || req.query.location;
-
+  // const pet = req.params.location || req.query.location;
+  // const service = req.params.location || req.query.location;
+const pet= null;
+const service = null;
   // if (!location) {
   //   return res.status(400).json({ error: 'Location is required' });
   // }

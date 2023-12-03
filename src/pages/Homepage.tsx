@@ -8,6 +8,7 @@ import {
   CardContent,
   CardMedia,
   Chip,
+  CircularProgress,
   Grid,
   IconButton,
   Rating,
@@ -36,26 +37,33 @@ function Homepage() {
     Date: "",
     PetNumber: "",
   });
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     // fetch searchbar data
     const { Address, PetService, Date, PetNumber } = formValues;
     console.log(Address, PetService, Date, PetNumber);
-
-    fetch('http://localhost:3001/api/services/waterloo', {
-      method: 'GET',
+    setLoading(true);
+    setResults([]);
+    fetch("http://localhost:3001/api/services/" + Address, {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     })
       .then((response) => response.json())
       .then((data) => {
+        setResults(data);
         // Handle the data from the response
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -89,7 +97,7 @@ function Homepage() {
               spacing={3}
               justifyContent="center"
               alignItems="center"
-             // component="form"
+              // component="form"
             >
               <Grid item xs={12} md={3} display="flex" flexDirection="column">
                 <Typography>Location</Typography>
@@ -127,9 +135,20 @@ function Homepage() {
                   onChange={handleInputChange}
                 />
               </Grid>
-              <Grid item xs={12} alignItems="center" md={1} display="flex" flexDirection="column">
+              <Grid
+                item
+                xs={12}
+                alignItems="center"
+                md={1}
+                display="flex"
+                flexDirection="column"
+              >
                 {!isSmallScreen ? (
-                  <IconButton type="submit" size="large" sx={{ backgroundColor: "#3F51B5" }}>
+                  <IconButton
+                    type="submit"
+                    size="large"
+                    sx={{ backgroundColor: "#3F51B5" }}
+                  >
                     <Search sx={{ color: "white" }} />
                   </IconButton>
                 ) : (
@@ -141,6 +160,26 @@ function Homepage() {
             </Grid>
           </form>
         </Box>
+      </Stack>
+
+      <Stack>
+        {loading && <CircularProgress />}
+
+        {!loading && results.length < 1 && "No Results."}
+        <Grid container>
+          {results.map((result) => (
+            <Grid item md={4}>
+              <Card sx={{ width: "100%", background: "grey" }}>
+                <CardMedia sx={{ height: "200px" }}></CardMedia>
+                <CardContent sx={{background: '#fff'}}>
+                  <Typography variant='h5'>{result.service_location}</Typography>
+                  <Typography variant='h6'>{result.service}</Typography>
+
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       </Stack>
 
       <Stack alignItems="center" mt={5}>
