@@ -40,9 +40,11 @@ function Homepage() {
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchClicked, setSearchClicked] = useState(false);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    setSearchClicked(true);
     // fetch searchbar data
     const { Address, PetService, Date, PetNumber } = formValues;
     console.log(Address, PetService, Date, PetNumber);
@@ -165,16 +167,17 @@ function Homepage() {
       <Stack>
         {loading && <CircularProgress />}
 
-        {!loading && results.length < 1 && "No Results."}
+        {!loading && searchClicked && results.length === 0 && "No Results."}
         <Grid container>
           {results.map((result) => (
             <Grid item md={4}>
               <Card sx={{ width: "100%", background: "grey" }}>
                 <CardMedia sx={{ height: "200px" }}></CardMedia>
-                <CardContent sx={{background: '#fff'}}>
-                  <Typography variant='h5'>{result.service_location}</Typography>
-                  <Typography variant='h6'>{result.service}</Typography>
-
+                <CardContent sx={{ background: "#fff" }}>
+                  <Typography variant="h5">
+                    {result.service_location}
+                  </Typography>
+                  <Typography variant="h6">{result.service}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -267,6 +270,7 @@ function Homepage() {
             mb: 5,
             backgroundColor: "#FDD1C3",
             borderRadius: 5,
+            
           }}
         >
           <Box sx={{ display: "flex", flexDirection: "column", p: 2 }}>
@@ -317,3 +321,4 @@ function Homepage() {
 }
 
 export default Homepage;
+
