@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, FormEvent } from "react";
 import { Alert, Box, IconButton, InputAdornment, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -19,6 +19,7 @@ import Image from "next/image";
 import AuthHero from "@/components/AuthHero";
 import { useRouter } from "next/router";
 import useMediaQuery from '@mui/material/useMediaQuery';
+import axios from "axios";
 
 
 const RegistrationPage = () => {
@@ -29,7 +30,7 @@ const RegistrationPage = () => {
   const router = useRouter();
   const matches = useMediaQuery('(min-width:600px)');
   
-  const handleCreateUser = async (event: { preventDefault: () => void }) => {
+  const handleCreateUser = async (event: FormEvent) => {
     event.preventDefault();
     const userData = {
       name: name,
@@ -39,32 +40,27 @@ const RegistrationPage = () => {
     setRegisterStatus(null);
 
     try {
-      const response = await fetch("/api/createUser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
+      const response = await axios.post("http://localhost:3000/api/createUser", userData);
+  
       if (response.status === 201) {
         setRegisterStatus({
           success: true,
         });
         router.push("/login");
       } else {
-        const data = await response.json();
+        const data = response.data;
         setRegisterStatus({
           error: true,
           errorDescription: data.error || "There was an error.",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating user:", error);
       setRegisterStatus({
         error: true,
-        errorDescription: "There was an error.",
+        errorDescription: "There was an error. ",
       });
+      console.error("Error details:", error.response?.data || error.message);
     }
   };
   
@@ -96,7 +92,7 @@ const RegistrationPage = () => {
           borderRadius: matches ? "50px 0 0 50px" : "0px",
           backgroundColor: "white",
         }}
-        component={"form"}
+        component="form"
         onSubmit={handleCreateUser}
       >
         <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}

@@ -12,7 +12,7 @@ import { dirname } from 'path';
 
 app.use(
   session({
-    secret: 'secret',
+    secret: 'tanmayidev',
     resave: false,
     saveUninitialized: true,
   })
@@ -26,6 +26,8 @@ app.use(bodyParser.json());
 // Import your userController as an ES module
 import userController from './src/controllers/userController.js';
 import petController from './src/controllers/petController.js';
+import servicesController from './src/controllers/servicesController.js';
+import adminController from './src/controllers/adminController.js';
 
 // cors for requests
 app.use(cors());
@@ -40,18 +42,22 @@ app.use(express.static(path.join(__dirname, 'src/pages')));
 // });
 
 
-//testing data
 app.use(cors());
 
-// Sample data (replace with your own data source)
-const items = [
-  { id: 1, name: 'Item 1' },
-  { id: 2, name: 'Item 2' },
-  { id: 3, name: 'Item 3' },
-];
+const corsOptions = {
+  origin: 'http://localhost:3001/',
+  credentials: true,
+};
 
-app.get('/api/items', (req, res) => {
-  res.json(items);
+app.use(cors(corsOptions));
+
+
+app.get('/check-session', (req, res) => {
+  if (req.session.user) {
+    res.json({ message: 'Session is stored', userData: req.session.user });
+  } else {
+    res.json({ message: 'Session is not stored' });
+  }
 });
 
 app.get('/api/users', (req, res) => {
@@ -60,8 +66,10 @@ app.get('/api/users', (req, res) => {
 
 app.use('/api', userController);
 app.use('/api', petController);
+app.use('/api', servicesController);
+app.use('/api', adminController);
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

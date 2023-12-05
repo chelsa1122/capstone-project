@@ -4,11 +4,9 @@ import session from 'express-session';
 import fetch from 'node-fetch';
 
 const router = express.Router();
-const API_URL = 'http://localhost:3000/api/items';
 
 
 const getUserData = (req, res) => {
-  console.log('into userdata');
   const query = 'SELECT * FROM users'; 
 
   db.query(query, (error, results) => {
@@ -36,32 +34,28 @@ router.use(
   })
 );
 // Function to create a new user
-const createUser = (req, res) => {
-  console.log('Here');
+router.post('/createUser', async (req, res) => {
   const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
-    return res.status(400).json({ error: 'Name, email, and password are required' });
-  }
-
-  const user = { name, email, password };
-
-  const insertQuery = 'INSERT INTO user (name, email, password) VALUES (?, ?, ?)';
-  const insertValues = [user.name, user.email, user.password];
-
-  db.query(insertQuery, insertValues, (insertError, insertResult) => {
-    if (insertError) {
-      console.error('Error inserting user:', insertError);
-      return res.status(500).json({ error: 'Database error' });
+  try {
+    if (!name || !email || !password) {
+      throw new Error('Name, email, and password are required');
     }
+
+    const user = { name, email, password };
+    const insertQuery = 'INSERT INTO user SET ?';
+    const insertResult = await db.query(insertQuery, user);
 
     // Store user data in the session
     req.session.user = user;
 
     console.log('User inserted:', insertResult);
     return res.status(201).json({ message: 'User created successfully' });
-  });
-};
+  } catch (error) {
+    console.error('Error creating user:', error);
+    return res.status(500).json({ error: 'There was an error creating the user' });
+  }
+});
 
 // Function for user login
 const loginUser = (req, res) => {
@@ -87,8 +81,10 @@ const loginUser = (req, res) => {
 
     if (loginResults.length === 1) {
       // Store user data in the session
-      req.session.user = loginResults[0];
+       const { user_id, email } = loginResults[0];
+       req.session.user = { user_id, email };
 
+      console.log(req.session.user);
       return res.status(200).json({ message: 'Login successful' });
     } else {
       return res.status(401).json({ error: 'Authentication failed' });
@@ -130,8 +126,8 @@ const updateUser = (req, res) => {
 
 
 // Define the API routes
-router.post('/createUser', createUser);
-router.post('/login', loginUser);
-router.put('/updateUser', updateUser);
+// router.post('/api/createUser', createUser);
+router.post('/api/login', loginUser);
+router.put('/api/updateUser', updateUser);
 
 export default router;

@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { useTheme } from "@mui/material/styles";
-import axios from 'axios';
+import axios from "axios";
 
 function PetDetails() {
   const theme = useTheme();
@@ -30,7 +30,7 @@ function PetDetails() {
 
   useEffect(() => {
     const fetchPets = async () => {
-      const res = await axios.get('http://localhost:3001/api/getPetDetails');
+      const res = await axios.get('http://localhost:3000/api/getPetDetails');
       setPets(res.data);
     };
     fetchPets();

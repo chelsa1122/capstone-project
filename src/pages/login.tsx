@@ -1,5 +1,4 @@
 import AuthHero from "@/components/AuthHero";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -12,12 +11,14 @@ import {
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import axios from "axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -25,38 +26,32 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginStatus, setLoginStatus] = useState<any>(null);
   const router = useRouter();
-  const matches = useMediaQuery('(min-width:600px)');
+  const matches = useMediaQuery("(min-width:600px)");
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setLoginStatus(null);
-    fetch("http://localhost:3001/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    })
-      .then((res) => {
-        if (res.status == 200) {
-          setLoginStatus({
-            success: true,
-          });
-          router.push("/PetDetails");
-        } else
-          setLoginStatus({
-            error: true,
-            errorDescription: "Invalid email or password",
-          });
-      })
-      .catch((err) => {
+
+    try {
+      const response = await axios.post("http://localhost:3001/api/login", {
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        setLoginStatus({ success: true });
+        router.push("/PetDetails");
+      } else {
         setLoginStatus({
           error: true,
-          errorDescription: "An unknown error occurred",
+          errorDescription: "Invalid email or password",
         });
+      }
+    } catch (error) {
+      setLoginStatus({
+        error: true,
+        errorDescription: "An unknown error occurred",
       });
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -68,22 +63,20 @@ const LoginPage = () => {
       sx={{
         display: "flex",
         flexDirection: matches ? "row" : "column",
-        alignItems: "stretch", // Stretch both sides vertically
+        alignItems: "stretch",
         height: "100vh",
-        background: "#FFC900", // Set the background color to yellow
+        background: "#FFC900",
       }}
     >
       <AuthHero />
-
-      {/* Right Side - White with Login Form */}
       <Paper
         elevation={3}
         sx={{
           display: "flex",
           flexDirection: "column",
-          flex: matches ? "0 0 60%" : "1 0 auto", // Take up 70% of the viewport width on desktop, auto on mobile
+          flex: matches ? "0 0 60%" : "1 0 auto",
           borderRadius: matches ? "50px 0 0 50px" : "0",
-          backgroundColor: "white", // Set the background color to white
+          backgroundColor: "white",
         }}
       >
         <div style={{ flex: 1 }} />
@@ -118,7 +111,7 @@ const LoginPage = () => {
                   <IconButton
                     onClick={togglePasswordVisibility}
                     edge="end"
-                    sx={{ color: '"#9E9E9E' }}
+                    sx={{ color: "#9E9E9E" }}
                   >
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
@@ -154,7 +147,7 @@ const LoginPage = () => {
             Sign Up Here
           </Button>
         </Stack>
-        <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
+        <div style={{ flex: 1 }} />
       </Paper>
     </Box>
   );

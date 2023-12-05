@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Function to get all users
 const getAllUsers = (req, res) => {
-  const query = 'SELECT * FROM users';
+  const query = 'SELECT * FROM user';
 
   db.query(query, (error, results) => {
     if (error) {
@@ -82,10 +82,30 @@ const deleteUserById = (req, res) => {
   });
 };
 
+// Function for admin login
+const loginAdmin = (req, res) => {
+  const { username, password } = req.body;
+
+  // Check if the provided username and password are correct
+  if (username === 'admin' && password === 'admin@123') {
+    // Set a session variable to indicate that the admin is logged in
+    req.session.adminLoggedIn = true;
+
+    return res.status(200).json({ message: 'Admin login successful' });
+  } else {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+};
+
+// Export the functions
+export { getAllUsers, getUserById, loginAdmin };
+
+
 // Define the API routes for users
-router.get('/users', getAllUsers);
+router.get('/admin/login', loginAdmin);
+router.post('/admin/login', loginAdmin);
+router.get('/admin/users', getAllUsers);
 router.get('/users/:id', getUserById);
-router.post('/users', createUser);
 router.put('/users/:id', updateUserById);
 router.delete('/users/:id', deleteUserById);
 
