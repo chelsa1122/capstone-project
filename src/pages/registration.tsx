@@ -75,9 +75,9 @@ const RegistrationPage = () => {
       sx={{
         display: "flex",
         flexDirection: matches ? "row" : "column",
-        alignItems: "stretch", // Stretch both sides vertically
+        alignItems: "stretch",
         height: "100vh",
-        background: "#FFC900", // Set the background color to yellow
+        background: "#FFC900", 
       }}
     >
       {/* Left Side - Yellow */}
@@ -150,7 +150,7 @@ const RegistrationPage = () => {
               marginLeft: "auto",
               marginRight: "auto",
               width: "50%",
-            }} // Center the text field
+            }} 
             label="Full Name"
             variant="standard"
             onChange={(e) => setName(e.target.value)}
@@ -161,7 +161,7 @@ const RegistrationPage = () => {
               marginLeft: "auto",
               marginRight: "auto",
               width: "50%",
-            }} // Center the text field
+            }} 
             label="Email Address"
             variant="standard"
             onChange={(e) => setEmail(e.target.value)}
@@ -223,7 +223,7 @@ const RegistrationPage = () => {
           Sign Up
         </Button>
         <Button href="/login">Already have an account? Log in</Button>
-        <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
+        <div style={{ flex: 1 }} /> 
       </Paper>
     </Box>
   );
