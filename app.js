@@ -68,10 +68,7 @@ app.get('/api/users', (req, res) => {
 app.use('/api', userController);
 app.use('/api', petController);
 app.use('/api', servicesController);
-<<<<<<< HEAD
 app.use('/api', adminController);
-=======
->>>>>>> cd0544de4f433cddcfcc76ed33a870a888365537
 
 const port = process.env.PORT || 3000;
 
