@@ -1,14 +1,13 @@
 // ** MUI Imports
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Chip from '@mui/material/Chip';
 import Table from '@mui/material/Table';
 import TableRow from '@mui/material/TableRow';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
+import Button from '@mui/material/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -31,7 +30,7 @@ const DashboardTable = () => {
     // Fetch data from your backend API
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/admin/users'); 
+        const response = await axios.get('http://localhost:3000/api/admin/users');
         setRows(response.data);
         console.log(response.data);
       } catch (error) {
@@ -41,51 +40,95 @@ const DashboardTable = () => {
 
     fetchData();
   }, []);
+  const handleEdit = (userId) => {
+    // Implement your edit logic here
+    console.log('Edit button clicked for user ID:', userId);
+  };
+
+  const handleDelete = (userId) => {
+    // Implement your delete logic here
+    console.log('Delete button clicked for user ID:', userId);
+  };
+
+
+  const handleLogout = () => {
+    // Implement your logout logic here
+    console.log('Logout button clicked');
+  };
 
   return (
-    <Card>
-      <TableContainer>
-        <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Age</TableCell>
-              <TableCell>Address</TableCell>
-              <TableCell>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.name} sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}>
-                 {/* <TableCell sx={{ py: (theme) => `${theme.spacing(0.5)} !important` }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{row.name}</Typography>
-                    <Typography variant="caption">{row.designation}</Typography>
-                  </Box>
-                </TableCell> */}
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.email}</TableCell>
-                <TableCell>{row.age}</TableCell>
-                <TableCell>{row.address}</TableCell>
-                <TableCell>
-                  {/* <Chip
-                    label={row.status}
-                    color={statusObj[row.status].color}
-                    sx={{
-                      height: 24,
-                      fontSize: '0.75rem',
-                      textTransform: 'capitalize',
-                      '& .MuiChip-label': { fontWeight: 500 },
-                    }}
-                  /> */}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Card>
+    <div className="container-fluid">
+      <div className="row">
+        {/* Top Header Panel */}
+        <header className="col-md-12 bg-light d-flex justify-content-between align-items-center p-3">
+          <h2>PetAdmin</h2>
+          <Button variant="outlined" onClick={handleLogout}>
+            Logout
+          </Button>
+        </header>
+
+        {/* Left Side Navigation Panel */}
+        <nav className="col-md-2 d-none d-md-block bg-light sidebar">
+          <div className="sidebar-sticky">
+            <ul className="nav flex-column">
+              <li className="nav-item">
+                <a className="nav-link active" href="#">
+                  Dashboard
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  Users
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  Pets
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        {/* Main Content */}
+        <main role="main" className="col-md-10 px-4">
+          <Card>
+            <TableContainer>
+              <Table className="table" aria-label="table in dashboard">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Age</TableCell>
+                    <TableCell>Address</TableCell>
+                    <TableCell>Actions</TableCell> 
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                {rows.map((row) => (
+                  <TableRow key={row.name}>
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.email}</TableCell>
+                    <TableCell>{row.age}</TableCell>
+                    <TableCell>{row.address}</TableCell>
+                    
+                    <TableCell>
+                      <Button variant="outlined" onClick={() => handleEdit(row.id)}>
+                        Edit
+                      </Button>
+                      <Button variant="outlined" onClick={() => handleDelete(row.id)}>
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
+        </main>
+      </div>
+    </div>
   );
 };
 

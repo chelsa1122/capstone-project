@@ -105,9 +105,9 @@ export { getAllUsers, getUserById, loginAdmin };
 router.get('/admin/login', loginAdmin);
 router.post('/admin/login', loginAdmin);
 router.get('/admin/users', getAllUsers);
-router.get('/users/:id', getUserById);
-router.put('/users/:id', updateUserById);
-router.delete('/users/:id', deleteUserById);
+router.get('/admin/users/:id', getUserById);
+router.put('/admin/users/:id', updateUserById);
+router.delete('/admin/users/:id', deleteUserById);
 
 // Function to get all pets
 const getAllPets = (req, res) => {
