@@ -8,7 +8,6 @@ const app = express();
 const router = express.Router();
 
 import { fileURLToPath } from 'url';
-import servicesController from './src/controllers/servicesController.js'
 import { dirname } from 'path';
 
 app.use(
@@ -29,6 +28,7 @@ import userController from './src/controllers/userController.js';
 import petController from './src/controllers/petController.js';
 import servicesController from './src/controllers/servicesController.js';
 import adminController from './src/controllers/adminController.js';
+import appointmentController from './src/controllers/appointmentController.js';
 
 // cors for requests
 app.use(cors());
@@ -46,7 +46,7 @@ app.use(express.static(path.join(__dirname, 'src/pages')));
 app.use(cors());
 
 const corsOptions = {
-  origin: 'http://localhost:3001/',
+  origin: ['http://localhost:3001/', 'http://localhost:3000/'],
   credentials: true,
 };
 
@@ -68,12 +68,9 @@ app.get('/api/users', (req, res) => {
 app.use('/api', userController);
 app.use('/api', petController);
 app.use('/api', servicesController);
-<<<<<<< HEAD
 app.use('/api', adminController);
-=======
->>>>>>> cd0544de4f433cddcfcc76ed33a870a888365537
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
