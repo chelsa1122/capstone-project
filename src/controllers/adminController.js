@@ -118,6 +118,7 @@ const getAllPets = (req, res) => {
       console.error('Error fetching pets:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     } else {
+      console.log(results);
       res.json(results);
     }
   });
@@ -212,11 +213,11 @@ const deletePetById = (req, res) => {
 };
 
 // Define the API routes for pets
-router.get('/pets', getAllPets);
-router.get('/pets/:id', getPetById);
-router.post('/pets', createPet);
-router.put('/pets/:id', updatePetById);
-router.delete('/pets/:id', deletePetById);
+router.get('/admin/pets', getAllPets);
+router.get('/admin/pets/:id', getPetById);
+router.post('/admin/pets', createPet);
+router.put('/admin/pets/:id', updatePetById);
+router.delete('/admin/pets/:id', deletePetById);
 
 // Export the router
 export default router;

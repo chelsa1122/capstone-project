@@ -30,7 +30,7 @@ const DashboardTable = () => {
     // Fetch data from your backend API
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/admin/users');
+        const response = await axios.get('http://localhost:3000/api/admin/pets');
         setRows(response.data);
         console.log(response.data);
       } catch (error) {
@@ -98,9 +98,9 @@ const DashboardTable = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Name</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Age</TableCell>
-                    <TableCell>Address</TableCell>
+                    <TableCell>dob</TableCell>
+                    <TableCell>Weight</TableCell>
+                    <TableCell>User</TableCell>
                     <TableCell>Actions</TableCell> 
                   </TableRow>
                 </TableHead>
@@ -108,9 +108,9 @@ const DashboardTable = () => {
                 {rows.map((row) => (
                   <TableRow key={row.name}>
                     <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.email}</TableCell>
-                    <TableCell>{row.age}</TableCell>
-                    <TableCell>{row.address}</TableCell>
+                    <TableCell>{row.dob}</TableCell>
+                    <TableCell>{row.weight}</TableCell>
+                    <TableCell>{row.user}</TableCell>
                     
                     <TableCell>
                       <Button variant="outlined" onClick={() => handleEdit(row.id)}>

@@ -26,13 +26,7 @@ export { getUserData };
 
 
 // Session in-memory storage  
-router.use(
-  session({
-    secret: 'PETPAL@13',
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+
 // Function to create a new user
 router.post('/createUser', async (req, res) => {
   const { name, email, password } = req.body;
