@@ -3,7 +3,8 @@ import Navbar from "@/components/Navbar";
 import FeatureBox from "@/components/Featurebox";
 import StepDescription from "@/components/StepDescription";
 import CalendarIcon from "@/components/CalendarIcon";
-// import GroomingResultItem from "@components/GroomingResultItem";
+import GroomingResultItem from "@/components/GroomingResultItem";
+import AppointmentDialog from "@/components/AppointmentDialog";
 
 import {
   Box,
@@ -22,20 +23,55 @@ import {
   Typography,
   useMediaQuery,
   SvgIcon,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Footer from "./Footer";
+import { useRouter } from 'next/router'
 
-function GroomingResultItem({id,title, imageUri, description, address, price, timing, rating, onBookAppointmentClick}) {
+
+function getServices(address){
+    return fetch("http://localhost:3001/api/services/" + address, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+    }).then((response) => response.json());
+}
+
+function formatZip(zip){
+  // remove space
+  return zip.replace(/s+/g, '').toUpperCase();
+}
+
+function formatAddress(result){
+  // format address of grooming item
+  return `${result.street_address} ${result.service_location}, ${result.province}, ${formatZip(result.zip)}`;
+}
+
+function AppointmentForm({title, imageUri, addr, price, showNextDays, blockedSlots, onSubmit, onCancel}){
+  const [formValues, setFormValues] = useState({
+    appointmentDate: new Date(),
+    time: "10:00 am"
+  });
+  const am_times = [10, 11].map((t)=>{return `${t}:00 am`});
+  const pm_times = [12, 1, 2, 3, 4, 5].map((t)=>{return `${t}:00 pm`});
+  const times = am_times.concat(pm_times);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
   return (
-    <Box sx={{
-        borderRadius: "20px",
-        border: "2px solid #3949AB",
-        background: "#FFF",
-        color: "#616161",
-    }}>
+    <Box>
+      <Stack direction="row">
         <Stack direction="row" sx={{"marginTop": "1%", padding: "1%",}}>
             <Box sx={{"minHeight": "100%"
                    }}>
@@ -45,84 +81,121 @@ function GroomingResultItem({id,title, imageUri, description, address, price, ti
                 }} />
             </Box>
             <Stack direction="column" sx={{marginLeft: "2%"}}>
-                {/* Title */}
-                <Box>
-                    <Typography variant="h6" sx={{fontWeight: 500}}>
-                        {title}
+              {/* Title */}
+              <Box>
+                  <Typography variant="h6" sx={{fontWeight: 500}}>
+                      {title}
+                  </Typography>
+                  <Typography sx={{marginTop: "3%", fontWeight: 300}}>
+                      {addr}
+                  </Typography>
+                  <Box sx={{marginTop: "3%"}}>
+                    <Typography>
+                        ${price} / session
                     </Typography>
-                </Box>
-                <Box sx={{marginTop: "3%"}}>
-                    <Typography sx={{fontWeight: 400}}>
-                        {description}
-                    </Typography>
-                </Box>
-                <Box sx={{marginTop: "3%"}}>
-                    <Typography sx={{fontWeight: 300}}>
-                        {address}
-                    </Typography>
-                </Box>
-                <Stack direction="row" sx={{marginTop: "5%"}}>
-                    <Box>
-                        <Typography>
-                            {price}
-                        </Typography>
-                    </Box>
-                    <Box sx={{ height: "25px", marginLeft: "15px", paddingRight: "15px", borderLeft: "1px solid #BDBDBD"}}>
-                    </Box>
-                    <Typography sx={{color: "#2E7D32"}}>open</Typography>
-                    <Typography sx={{marginLeft: "5%"}}>{timing}</Typography>
-                </Stack>
-                <Box>
-                    <Rating name="read-only" value={rating || 1} precision={0.5} size="small" readOnly />
-                </Box>
-                <Stack direction="row-reverse" >
-                    <Box>
-                        <Button class="btn btn-primary" variant="contained"
-                            endIcon={<CalendarIcon/>}
-                            sx={{borderRadius:"10px"}}
-                        >Book Appointment</Button>
-                    </Box>
-                </Stack>
+                  </Box>
+              </Box>
             </Stack>
         </Stack>
+      </Stack>
+      <form onSubmit={(e)=>{e.preventDefault();onSubmit(e, formValues);}}>
+        <Grid
+           container
+           spacing={3}
+           justifyContent="center"
+           alignItems="center"
+          >
+            <Grid item xs={12} md={6} display="flex" flexDirection="column">
+                <Typography>Date</Typography>
+                <TextField
+                  name="appointmentDate"
+                  type="date"
+                  placeholder="Enter appointment date"
+                  value={formValues.appointmentDate}
+                  onChange={handleInputChange}
+                />
+            </Grid>
+            <Grid item xs={12} md={6} display="flex" flexDirection="column">
+                <Typography>Time</Typography>
+                 <Select
+                    labelId="select-time-label"
+                    id="select-time"
+                    value={formValues.time}
+                    label="Time"
+                    name="time"
+                    onChange={handleInputChange}
+                  >
+                    {
+                      times.map(function(t){
+                        return <MenuItem key={t} value={t}>{t}</MenuItem>
+                      })
+                    }
+                  </Select>
+            </Grid>
+        </Grid>
+        <Stack direction="row" justifyContent="end" spacing={3} sx={{marginTop: "2%"}}>
+          <Button className="btn btn-primary" variant="contained"
+              sx={{borderRadius:"10px"}}
+              onClick={(e)=>{e.preventDefault();onSubmit(e, formValues);}}
+          >Book Appointment</Button>
+          <Button className="btn btn-secondary" variant="contained"
+              sx={{borderRadius:"10px"}}
+              onClick={onCancel}
+          >Cancel</Button>
+        </Stack>
+      </form>
     </Box>
   );
 }
 
-function GroomingList({initialResults}) {
+function GroomingList() {
+    const [openAddressForm, setOpenAddressForm] = useState(false);
+    const router = useRouter();
     const [formValues, setFormValues] = useState({
-        Address: "",
+        Address:  router.query || "toronto",
         PetService: "grooming",
         Date: "",
         PetNumber: "",
       });
-      const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+    const [results, setResults] = useState([]);
+    const [clickedResult, setClickedResult] = useState({});
+    const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
-      const handleFormSubmit = (e) => {
+    // Load and set api results
+    const loadResults = function(addr){
+      getServices(addr || formValues.Address)
+        .then((data)=>{
+          setResults(data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("There was an error fetching results");
+        });
+    };
+    // Initially load based on query location.
+    useEffect(()=>{
+      setFormValues((prevValues)=>({
+        ...prevValues, Address: router.query.loc || "Toronto",
+      }));
+      loadResults(router.query.loc || "Toronto" );
+    }, [router]);
+    
+    const handleFormSubmit = (e) => {
         e.preventDefault();
         // setSearchClicked(true);
         // fetch searchbar data
         const { Address, PetService, Date, PetNumber } = formValues;
         console.log(Address, PetService, Date, PetNumber);
         // setLoading(true);
-        // setResults([]);
-        fetch("http://localhost:3001/api/services/" + Address, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("SEARCH RESULTS");
-            // setResults(data);
-            // Handle the data from the response
+        setResults([]);
+        getServices(Address)
+          .then((data)=>{
+            setResults(data);
+            window.location.href.replace()
           })
           .catch((error) => {
             console.error("Error:", error);
-          })
-          .finally(() => {
-            // setLoading(false);
+            alert("There was an error fetching results");
           });
       };
 
@@ -134,51 +207,64 @@ function GroomingList({initialResults}) {
         }));
       };
 
+    const closeAppointmentDialog = ()=>{
+      setOpenAddressForm(false);
+    };
     const handleAppointmentClick = (appointmentResult) => {
         console.log("Clicked ", appointmentResult);
+        setOpenAddressForm(true);
+        setClickedResult(appointmentResult);
     };
 
-    let results = [
-        {
-            title: "Zen Dog Service",
-            description: "Unleash the Beauty: Pamper Your Pooch with Pawsome Grooming!",
-            imageUri: "Images/grooming-results/zen.jpg",
-            address: "584 Church Street Toronto, ON M4Y 2E5",
-            price: "$50:00 / session",
-            timing: "10:00 am - 7:00 pm",
-            rating: 4,
-        },
-        {
-            title: "Tailspin Dog spa",
-            description: "From Fluff to Fabulous: Tail-wagging Elegance Awaits at Our Grooming Salon!",
-            imageUri: "Images/grooming-results/tailspin.jpg",
-            address: "12 Irwin Avenue Toronto, ON M4Y 1K9",
-            price: "$50:00 / session",
-            timing: "10:00 am - 7:00 pm",
-            rating: 4,
-        },
-    ];
+    // let results = [
+    //     {
+            //   id: 1,
+            //   service_location: "toronto",
+            //   service: "Zen Dog Service",
+            //   description: "Unleash the Beauty: Pamper Your Pooch with Pawsome Grooming!",
+            //   imageName: "zen.jpg",
+            //   street_address: "584 Church Street",
+            //   province: "Ontario",
+            //   zip: "M4Y2E5",
+            //   price_per_session: "50.00",
+            //   posted_timing: "10:00 am - 7:00 pm",
+            //   rating: 4,
+            // },
+            // {
+            //   id: 2,
+            //   service_location: "toronto",
+            //   service:"Tailspin Dog spa",
+            //   description: "From Fluff to Fabulous: Tail-wagging Elegance Awaits at Our Grooming Salon!",
+            //   imageName: "tailspin.jpg",
+            //   street_address: "12 Irwin Avenue",
+            //   province: "Ontario",
+            //   zip: "M4Y1K9",
+            //   price_per_session: "50.00",
+            //   posted_timing: "10:00 am - 7:00 pm",
+            //   rating: 4,
+            // },
+    // ];
 
     
 
     let resultItems = results.map((result, idx) => {
         return (
-            <Box id={idx}>
+            <Box key={result.id}>
                 <GroomingResultItem 
-                    id={idx}
-                    title={result.title}
-                    imageUri={result.imageUri} 
+                    id={result.id}
+                    title={result.service}
+                    imageUri={"/Images/grooming-results/" + result.imageName} 
                     description={result.description}
-                    address={result.address}
-                    price={result.price}
-                    timing={result.timing}
+                    address={formatAddress(result)}
+                    price={result.price_per_session}
+                    timing={result.posted_timing}
                     rating={result.rating}
-                    onBookAppointmentClick={handleAppointmentClick}
-                />
-                
+                    onBookAppointmentClick={(e)=>{handleAppointmentClick(result)}}
+                />                
             </Box>
         );
     });
+
     return (
     <Box>
         <Box>
@@ -242,17 +328,31 @@ function GroomingList({initialResults}) {
             justifyContent="center"
             alignItems="center"
         >
-            <Grid item xs={2} md={4} display="flex" flexDirection="column">
+            <Grid item xs={2} sm={3} md={4} display="flex" flexDirection="column">
             </Grid>
-            <Grid item xs={8} md={4} display="flex" flexDirection="column">
+            <Grid item xs={8} sm={6} md={4} display="flex" flexDirection="column">
                 <Stack direction="column"  divider={<Divider orientation="horizontal" flexItem />}
                  spacing={2}>
                     {resultItems}
                 </Stack>
             </Grid>
-            <Grid item xs={2} md={4} display="flex" flexDirection="column">
+            <Grid item xs={2} sm={3} md={4} display="flex" flexDirection="column">
             </Grid>
         </Grid>
+          <AppointmentDialog open={openAddressForm} handleClose={closeAppointmentDialog} >
+            {clickedResult.id !=null ? (
+              <AppointmentForm 
+                title={clickedResult.service}
+                imageUri={"/Images/grooming-results/" + clickedResult.imageName} 
+                price={clickedResult.price_per_session}
+                addr={formatAddress(clickedResult)}
+                showNextDays={14}
+                blockedSlots={[]}
+                onSubmit={closeAppointmentDialog}
+                onCancel={closeAppointmentDialog}
+              />
+            ) : (<Typography>Something went wrong</Typography>)}
+          </AppointmentDialog>  
         
         <Footer />
     </Box>

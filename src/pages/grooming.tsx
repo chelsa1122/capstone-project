@@ -38,29 +38,13 @@ function Grooming() {
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
-        setSearchClicked(true);
-        // fetch searchbar data
         const { Address, PetService, Date, PetNumber } = formValues;
-        console.log(Address, PetService, Date, PetNumber);
-        setLoading(true);
-        setResults([]);
-        fetch("http://localhost:3001/api/services/" + Address, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            setResults(data);
-            // Handle the data from the response
-        })
-        .catch((error) => {
-            console.error("Error:", error);
-        })
-        .finally(() => {
-            setLoading(false);
-        });
+        if(Address.trim().length == 0){
+            return;
+        }
+        else{
+            window.location.href = `/GroomingList?loc=${encodeURIComponent(Address)}`;
+        }
     };
 
       const handleInputChange = (e) => {
@@ -116,6 +100,7 @@ function Grooming() {
                           placeholder="Enter address or suburb"
                           value={formValues.Address}
                           onChange={handleInputChange}
+                          required
                         />
                       </Grid>
                       <Grid item xs={12} md={2.5} display="flex" flexDirection="column">
