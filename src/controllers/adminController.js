@@ -105,9 +105,9 @@ export { getAllUsers, getUserById, loginAdmin };
 router.get('/admin/login', loginAdmin);
 router.post('/admin/login', loginAdmin);
 router.get('/admin/users', getAllUsers);
-router.get('/admin/users/:id', getUserById);
-router.put('/admin/users/:id', updateUserById);
-router.delete('/admin/users/:id', deleteUserById);
+router.get('/users/:id', getUserById);
+router.put('/users/:id', updateUserById);
+router.delete('/users/:id', deleteUserById);
 
 // Function to get all pets
 const getAllPets = (req, res) => {
@@ -118,7 +118,6 @@ const getAllPets = (req, res) => {
       console.error('Error fetching pets:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     } else {
-      console.log(results);
       res.json(results);
     }
   });
@@ -213,11 +212,11 @@ const deletePetById = (req, res) => {
 };
 
 // Define the API routes for pets
-router.get('/admin/pets', getAllPets);
-router.get('/admin/pets/:id', getPetById);
-router.post('/admin/pets', createPet);
-router.put('/admin/pets/:id', updatePetById);
-router.delete('/admin/pets/:id', deletePetById);
+router.get('/pets', getAllPets);
+router.get('/pets/:id', getPetById);
+router.post('/pets', createPet);
+router.put('/pets/:id', updatePetById);
+router.delete('/pets/:id', deletePetById);
 
 // Export the router
 export default router;

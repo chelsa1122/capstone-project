@@ -18,9 +18,8 @@ import {
 import Image from "next/image";
 import AuthHero from "@/components/AuthHero";
 import { useRouter } from "next/router";
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
-
 
 const RegistrationPage = () => {
   const [name, setName] = useState("");
@@ -28,8 +27,8 @@ const RegistrationPage = () => {
   const [password, setPassword] = useState("");
   const [registerStatus, setRegisterStatus] = useState<any>(null);
   const router = useRouter();
-  const matches = useMediaQuery('(min-width:600px)');
-  
+  const matches = useMediaQuery("(min-width:600px)");
+
   const handleCreateUser = async (event: FormEvent) => {
     event.preventDefault();
     const userData = {
@@ -40,8 +39,11 @@ const RegistrationPage = () => {
     setRegisterStatus(null);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/createUser", userData);
-  
+      const response = await axios.post(
+        "http://localhost:3000/api/createUser",
+        userData
+      );
+
       if (response.status === 201) {
         setRegisterStatus({
           success: true,
@@ -63,7 +65,6 @@ const RegistrationPage = () => {
       console.error("Error details:", error.response?.data || error.message);
     }
   };
-  
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -88,54 +89,27 @@ const RegistrationPage = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          flex: matches ? "0 0 60%" : "0 0 100%", // width of the white background
-          borderRadius: matches ? "50px 0 0 50px" : "0px",
+          flex: matches ? "0 0 60%" : "1 0 auto",
+          borderRadius: matches ? "50px 0 0 50px" : "0",
           backgroundColor: "white",
         }}
-        component="form"
-        onSubmit={handleCreateUser}
       >
-        <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
-        <Stack textAlign="center" sx={{ marginBottom: 5 }}>
-          <Typography variant="h5">Create Account</Typography>
-        </Stack>
+        <div style={{ flex: 1 }} />{" "}
         <Stack
-          direction={matches ? "row" : "column"}
-          alignItems="center"
-          justifyContent="center"
-          spacing={2}
-          sx={{ marginBottom: 5 }}
+          component="form"
+          onSubmit={handleCreateUser}
+          gap={2}
+          mx="auto"
+          width={matches ? "50%" : "80%"}
         >
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={<Google sx={{ color: "#EB4335" }} />}
-          >
-            <Typography sx={{ color: "#9E9E9E" }}>
-              Sign Up with Google
-            </Typography>
-          </Button>
-          <Button
-            variant="contained"
-            startIcon={<Facebook sx={{ color: "#1877F2" }} />}
-          >
-            Sign Up with Facebook
-          </Button>
-        </Stack>
-        <Typography
-          textAlign="center"
-          color="#9E9E9E"
-          fontSize="20px"
-          marginTop={5}
-          marginBottom={5}
-        >
-          --OR--
-        </Typography>
-        <Stack>
+          {/* Spacer to push content to the center */}
+          <Stack textAlign="center" sx={{ marginBottom: 3 }}>
+            <Typography variant="h5">Create Account</Typography>
+          </Stack>
+
           {registerStatus && (
             <Alert
               sx={{
-                width: "50%",
                 mx: "auto",
               }}
               color={registerStatus?.error ? "error" : "success"}
@@ -145,37 +119,17 @@ const RegistrationPage = () => {
             </Alert>
           )}
           <TextField
-            sx={{
-              marginBottom: 5,
-              marginLeft: "auto",
-              marginRight: "auto",
-              width: "50%",
-            }} // Center the text field
+            autoFocus
             label="Full Name"
-            variant="standard"
             onChange={(e) => setName(e.target.value)}
           />
           <TextField
-            sx={{
-              marginBottom: 5,
-              marginLeft: "auto",
-              marginRight: "auto",
-              width: "50%",
-            }} // Center the text field
             label="Email Address"
-            variant="standard"
             onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
-            sx={{
-              marginBottom: 1,
-              marginLeft: "auto",
-              marginRight: "auto",
-              width: "50%",
-            }} // Center the text field
             label="Password"
             type={showPassword ? "text" : "password"}
-            variant="standard"
             onChange={(e) => setPassword(e.target.value)}
             InputProps={{
               endAdornment: (
@@ -191,38 +145,21 @@ const RegistrationPage = () => {
               ),
             }}
           />
+          <Button
+            sx={{
+              marginTop: 3,
+              backgroundColor: "#3F51B5",
+            }}
+            variant="contained"
+            color="primary"
+            type="submit"
+          >
+            Sign Up
+          </Button>
+          <Button sx={{ mt: 2 }} href="/login">
+            Already have an account? Log in
+          </Button>
         </Stack>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          width="50%"
-          mx="auto"
-        >
-          <Grid item xs={6}>
-            <FormControlLabel control={<Checkbox />} label="Remember me" />
-          </Grid>
-          <Grid item xs={6}>
-            <Link href="#" sx={{ paddingRight: "20px" }}>
-              Forgot Password?
-            </Link>
-          </Grid>
-        </Stack>
-        <Button
-          sx={{
-            marginTop: 1,
-            marginLeft: "auto",
-            marginRight: "auto",
-            width: "50%",
-            backgroundColor: "#3F51B5",
-          }}
-          variant="contained"
-          color="primary"
-          type="submit"
-        >
-          Sign Up
-        </Button>
-        <Button href="/login">Already have an account? Log in</Button>
         <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
       </Paper>
     </Box>
