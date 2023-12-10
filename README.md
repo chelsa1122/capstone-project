@@ -1,3 +1,15 @@
 # capstone-project
-run ui server | npm run dev 
-backend | npm run start
+### Run ui server 
+```
+npm run dev 
+```
+### Run Backend
+- Create database
+```
+npm run migrate
+```
+- Run api server
+
+```
+npm run start
+```

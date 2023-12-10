@@ -8,8 +8,8 @@ function StepDescription({number, title, content}) {
            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="60" cy="60" r="60" fill="#FFECB3">
                 </circle>
-                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#FFFFFF"
-                    font-size="larger">
+                <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fill="#FFFFFF"
+                    fontSize="larger">
                     {number}
                 </text>   
            </svg> 

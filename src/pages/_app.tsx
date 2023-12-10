@@ -9,7 +9,7 @@ function App({ Component }: AppProps) {
       <Head>
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Oswald&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;600;700&display=swap"
         />
       </Head>
       <CssBaseline />
