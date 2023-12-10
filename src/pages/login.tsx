@@ -35,7 +35,7 @@ const LoginPage = () => {
       const response = await axios.post("http://localhost:3001/api/login", {
         email,
         password,
-      });
+      }, { withCredentials: true });
 
       if (response.status === 200) {
         setLoginStatus({ success: true });
