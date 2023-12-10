@@ -50,6 +50,15 @@ app.get('/check-session', (req, res) => {
     res.json({ message: 'Session is not stored' });
   }
 });
+app.post('/api/test-session', (req, res) => {
+  req.session.test = 'Hello, Session!';
+  res.json({ message: 'Session set successfully' });
+});
+
+app.get('/api/get-session', (req, res) => {
+  res.json({ sessionData: req.session });
+});
+
 
 app.get('/api/users', (req, res) => {
   userController.getUserData(req, res);
