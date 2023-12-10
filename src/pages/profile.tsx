@@ -9,13 +9,23 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import Link from "next/link";
 
-function Profile({ petDetails }) {
+function Profile({ petDetails, user }) {
   return (
-    <div>
+    <div style={{ padding: 30 }}>
+      <Typography p={3} variant="h4">
+        My Profile
+      </Typography>
+      <Card container spacing={2}>
+        <p> Email: {user.email}</p>
+      </Card>
       <Typography p={3} variant="h4">
         My Pets
       </Typography>
+      <Button LinkComponent={Link} href='/pet-details' variant="contained" color="primary">
+        Add
+      </Button>
       <Grid container p={3} gap={3}>
         {petDetails?.map((pet) => (
           <Grid component={Card} item>
@@ -72,6 +82,7 @@ export const getServerSideProps = async (context) => {
     return {
       props: {
         petDetails,
+        user: user.data.userData,
       },
     };
   }

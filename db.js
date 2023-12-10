@@ -1,7 +1,7 @@
 import mysql from 'mysql';
 
 const db = mysql.createConnection({
-  host: 'sql5.freemysqlhosting.net	',
+  host: 'sql5.freemysqlhosting.net',
   user: 'sql5668092',
   password: 'GQE5XmGPIr',
   port: '3306',

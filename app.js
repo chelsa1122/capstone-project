@@ -30,10 +30,9 @@ app.use(
     origin: "http://localhost:3001",
     credentials: true,
   })
-app.post('/api/test', (req, res) => {
-  req.session.user = { test: 'data' };
-  res.json({ message: 'Session set successfully' });
-});
+);
+
+// Serve your static files (e.g., your frontend build)
 app.use(
   express.static(
     path.join(path.dirname(new URL(import.meta.url).pathname), "src/pages")

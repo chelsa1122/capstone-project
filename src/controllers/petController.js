@@ -15,8 +15,8 @@ const createPetDetail = (req, res) => {
   }
 
   // Assuming there's a 'user_id' in the session representing the logged-in user
-  const userId = req.session.user.user_id;
-
+  const {user_id: userId} = req.session.user;
+  console.log(req.session.user)
   //for testing
   // const userId = 1;
 
