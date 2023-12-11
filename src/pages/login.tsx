@@ -19,6 +19,7 @@ import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import axios from "axios";
+import urls from "../constants/urls";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -32,14 +33,14 @@ const LoginPage = () => {
     setLoginStatus(null);
 
     try {
-      const response = await axios.post("http://localhost:3001/api/login", {
+      const response = await axios.post(`${urls.apiHost}/login`, {
         email,
         password,
-      }, { withCredentials: true });
+      });
 
       if (response.status === 200) {
         setLoginStatus({ success: true });
-        router.push("/PetDetails");
+        window.location.href = "/pet-details";
       } else {
         setLoginStatus({
           error: true,
@@ -95,6 +96,7 @@ const LoginPage = () => {
           )}
           <TextField
             label="Email"
+            autoFocus
             variant="outlined"
             value={email}
             onChange={(e) => setEmail(e.target.value)}

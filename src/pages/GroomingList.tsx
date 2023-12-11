@@ -1,5 +1,4 @@
 import GroomingHero from "@/components/GroomingHero";
-import Navbar from "@/components/Navbar";
 import FeatureBox from "@/components/Featurebox";
 import StepDescription from "@/components/StepDescription";
 import CalendarIcon from "@/components/CalendarIcon";
@@ -268,7 +267,6 @@ function GroomingList() {
     return (
     <Box>
         <Box>
-            <Navbar />
             <Box
                 sx={{
                     background: '#FAFAFA',

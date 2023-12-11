@@ -1,5 +1,3 @@
-import GroomingHero from "@/components/GroomingHero";
-import Navbar from "@/components/Navbar";
 import FeatureBox from "@/components/Featurebox";
 import StepDescription from "@/components/StepDescription";
 import {
@@ -55,11 +53,11 @@ function Grooming() {
         }));
       };
 
-    // Set banner height and adjust starting of search bar depending on it.
-    let bannerHeight = 75; // vw  
-    let contentMarginTop = bannerHeight - 14; // vw
-    contentMarginTop = contentMarginTop <= 50 ? 50 : contentMarginTop; // clip at 50%
-    return (
+  // Set banner height and adjust starting of search bar depending on it.
+  let bannerHeight = 75; // vw
+  let contentMarginTop = bannerHeight - 14; // vw
+  contentMarginTop = contentMarginTop <= 50 ? 50 : contentMarginTop; // clip at 50%
+  return (
     <Box>
         <Box sx={{
             width: '100vw', 
@@ -75,7 +73,6 @@ function Grooming() {
             }}>
             </Box>
         <Box>
-            <Navbar />
             <Container
                 sx={{
                     borderRadius:"67.5px",
