@@ -10,6 +10,31 @@ const app = express();
 
 // import servicesController from './src/controllers/servicesController.js'
 
+<<<<<<< HEAD
+=======
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+app.use(bodyParser.json());
+
+
+// Serve your static files (e.g., your frontend build)
+app.use(express.static(path.join(path.dirname(new URL(import.meta.url).pathname), 'src/pages')));
+
+// Enable CORS for all routes
+// app.use(cors({
+//   origin: 'http://localhost:3001',
+//   credentials: true,
+// }));
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
+app.post('/api/test', (req, res) => {
+  req.session.user = { test: 'data' };
+  res.json({ message: 'Session set successfully' });
+});
+>>>>>>> main
 app.use(
   session({
     secret: "tanmayidev",
@@ -40,6 +65,7 @@ app.use(
 );
 
 // Your controllers import statements
+<<<<<<< HEAD
 import adminController from "./src/controllers/adminController.js";
 import petController from "./src/controllers/petController.js";
 import servicesController from "./src/controllers/servicesController.js";
@@ -56,10 +82,38 @@ app.post('/api/test-session', (req, res) => {
   req.session.test = 'Hello, Session!';
   res.json({ message: 'Session set successfully' });
 });
+=======
+import userController from './src/controllers/userController.js';
+import petController from './src/controllers/petController.js';
+import servicesController from './src/controllers/servicesController.js';
+import adminController from './src/controllers/adminController.js';
+import appointmentController from './src/controllers/appointmentController.js';
 
-app.get('/api/get-session', (req, res) => {
-  res.json({ sessionData: req.session });
-});
+// Routes
+// cors for requests
+app.use(cors());
+
+// Serve your static files (e.g., your frontend build)
+// app.use(express.static(path.join(__dirname, 'src/pages')));
+
+// Handle requests to render your index.tsx page
+// app.get('/', (req, res) => {
+//   // You can send your index.html file here
+//   res.sendFile(path.join(__dirname, 'src/pages/index.tsx'));
+// });
+
+
+app.use(cors());
+
+const corsOptions = {
+  origin: ['http://localhost:3001/', 'http://localhost:3000/'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+>>>>>>> main
+
 
 
 app.get("/api/users", (req, res) => {

@@ -7,8 +7,8 @@ function FeatureBox({title, content}) {
         <Box sx={{"minHeight": "100%"}}>
             <Box sx={{"marginTop": "50%", "minHeight": "100%" }}>
                 <svg width="62" height="24" viewBox="0 0 62 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18.5 33L57.8571 4" stroke="#283593" stroke-width="8" stroke-linecap="round"/>
-                    <path d="M18.5 33L11.25 23.8421L4 14.6842" stroke="#283593" stroke-width="8" stroke-linecap="round"/>
+                    <path d="M18.5 33L57.8571 4" stroke="#283593" strokeWidth="8" strokeLinecap="round"/>
+                    <path d="M18.5 33L11.25 23.8421L4 14.6842" stroke="#283593" strokeWidth="8" strokeLinecap="round"/>
                 </svg> 
             </Box>
         </Box>

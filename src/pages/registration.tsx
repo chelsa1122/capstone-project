@@ -76,9 +76,9 @@ const RegistrationPage = () => {
       sx={{
         display: "flex",
         flexDirection: matches ? "row" : "column",
-        alignItems: "stretch", // Stretch both sides vertically
+        alignItems: "stretch",
         height: "100vh",
-        background: "#FFC900", // Set the background color to yellow
+        background: "#FFC900", 
       }}
     >
       {/* Left Side - Yellow */}
@@ -119,11 +119,22 @@ const RegistrationPage = () => {
             </Alert>
           )}
           <TextField
-            autoFocus
+            sx={{
+              marginBottom: 5,
+              marginLeft: "auto",
+              marginRight: "auto",
+              width: "50%",
+            }} // Center the text field
             label="Full Name"
             onChange={(e) => setName(e.target.value)}
           />
           <TextField
+            sx={{
+              marginBottom: 5,
+              marginLeft: "auto",
+              marginRight: "auto",
+              width: "50%",
+            }} // Center the text field
             label="Email Address"
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -145,21 +156,38 @@ const RegistrationPage = () => {
               ),
             }}
           />
-          <Button
-            sx={{
-              marginTop: 3,
-              backgroundColor: "#3F51B5",
-            }}
-            variant="contained"
-            color="primary"
-            type="submit"
-          >
-            Sign Up
-          </Button>
-          <Button sx={{ mt: 2 }} href="/login">
-            Already have an account? Log in
-          </Button>
         </Stack>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          width="50%"
+          mx="auto"
+        >
+          <Grid item xs={6}>
+            <FormControlLabel control={<Checkbox />} label="Remember me" />
+          </Grid>
+          <Grid item xs={6}>
+            <Link href="#" sx={{ paddingRight: "20px" }}>
+              Forgot Password?
+            </Link>
+          </Grid>
+        </Stack>
+        <Button
+          sx={{
+            marginTop: 1,
+            marginLeft: "auto",
+            marginRight: "auto",
+            width: "50%",
+            backgroundColor: "#3F51B5",
+          }}
+          variant="contained"
+          color="primary"
+          type="submit"
+        >
+          Sign Up
+        </Button>
+        <Button href="/login">Already have an account? Log in</Button>
         <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
       </Paper>
     </Box>
