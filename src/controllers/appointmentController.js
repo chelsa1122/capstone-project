@@ -8,6 +8,7 @@ const router = express.Router();
   // Function to create a new appointment detail
   const createAppointment = (req, res) => {
   const userId = req.session.user.user_id;
+  // const userId = 1;
   if(userId == null){
     return res.status(400).json({error: "unauthorized access. login first."});
   }
@@ -22,11 +23,10 @@ const router = express.Router();
 
   // Check if an appointment already exists for the given user, service, and date
   const checkQuery = `
-    SELECT id FROM appointments
-    service_id = ? AND start_date_time = ?;
+    SELECT id FROM appointments WHERE service_id = ? AND start_date_time = ?;
   `;
 
-  connection.query(checkQuery, [serviceId, formattedDate], (err, results) => {
+  db.query(checkQuery, [serviceId, formattedDate], (err, results) => {
     if (err) {
       console.error('Error checking existing appointment:', err);
       return res.status(500).json({ error: 'Database error' });
@@ -34,24 +34,24 @@ const router = express.Router();
 
     if (results.length > 0) {
       console.log('Appointment already exists for the given user, service, and date', userId, serviceId, formattedDate);
-      return res.status(200).json({ error: 'Appointment already exists!' });
+      return res.status(200).json({status: "error", message: 'Appointment already exists!' });
 
     } else {
       // Create a new appointment
       var endDateTime = moment(appointmentStartDate).add(1, 'hours');
       const formattedEndDate = endDateTime.format('YYYY-MM-DD HH:mm:ss');
       const createQuery = `
-        INSERT INTO appointments (user_id, service_id, appointstart_date_time, end_date_time)
+        INSERT INTO appointments (user_id, service_id, start_date_time, end_date_time)
         VALUES (?, ?, ?, ?);
       `;
 
-      connection.query(createQuery, [userId, serviceId, formattedDate, formattedEndDate], (err, results) => {
+      db.query(createQuery, [userId, serviceId, formattedDate, formattedEndDate], (err, results) => {
         if (err) {
           console.error('Error creating appointment:', err);
           return res.status(500).json({ error: 'Database error' });
         }
         console.log('New appointment created successfully');
-        return res.status(201).json({message: "Appointment created successfully"});
+        return res.status(201).json({status: "success", message: "Appointment created successfully"});
       });
     }
   });

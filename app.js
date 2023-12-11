@@ -41,7 +41,7 @@ app.use(bodyParser.json());
 
 // Enable CORS for all routes
 const corsOptions = {
-  origin: ['http://localhost:3001/', 'http://localhost:3000'],
+  origin: true,
   credentials: true,
 };
 
