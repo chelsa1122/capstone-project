@@ -10,31 +10,7 @@ const app = express();
 
 // import servicesController from './src/controllers/servicesController.js'
 
-<<<<<<< HEAD
-=======
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
-app.use(bodyParser.json());
-
-
-// Serve your static files (e.g., your frontend build)
-app.use(express.static(path.join(path.dirname(new URL(import.meta.url).pathname), 'src/pages')));
-
-// Enable CORS for all routes
-// app.use(cors({
-//   origin: 'http://localhost:3001',
-//   credentials: true,
-// }));
-app.use(cors({
-  origin: true,
-  credentials: true,
-}));
-app.post('/api/test', (req, res) => {
-  req.session.user = { test: 'data' };
-  res.json({ message: 'Session set successfully' });
-});
->>>>>>> main
 app.use(
   session({
     secret: "tanmayidev",
@@ -65,24 +41,7 @@ app.use(
 );
 
 // Your controllers import statements
-<<<<<<< HEAD
-import adminController from "./src/controllers/adminController.js";
-import petController from "./src/controllers/petController.js";
-import servicesController from "./src/controllers/servicesController.js";
-import userController from "./src/controllers/userController.js";
 
-app.get("/api/check-session", (req, res) => {
-  if (req.session.user) {
-    res.json({ message: "Session is stored", userData: req.session.user });
-  } else {
-    res.json({ message: "Session is not stored" });
-  }
-});
-app.post('/api/test-session', (req, res) => {
-  req.session.test = 'Hello, Session!';
-  res.json({ message: 'Session set successfully' });
-});
-=======
 import userController from './src/controllers/userController.js';
 import petController from './src/controllers/petController.js';
 import servicesController from './src/controllers/servicesController.js';
@@ -111,8 +70,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
->>>>>>> main
 
 
 
