@@ -51,7 +51,7 @@ import appointmentController from './src/controllers/appointmentController.js';
 app.use(cors());
 
 // Serve your static files (e.g., your frontend build)
-app.use(express.static(path.join(__dirname, 'src/pages')));
+// app.use(express.static(path.join(__dirname, 'src/pages')));
 
 // Handle requests to render your index.tsx page
 // app.get('/', (req, res) => {
@@ -70,21 +70,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-app.get('/check-session', (req, res) => {
-  if (req.session.user) {
-    res.json({ message: 'Session is stored', userData: req.session.user });
-  } else {
-    res.json({ message: 'Session is not stored' });
-  }
-});
-app.post('/api/test-session', (req, res) => {
-  req.session.test = 'Hello, Session!';
-  res.json({ message: 'Session set successfully' });
-});
-
-app.get('/api/get-session', (req, res) => {
-  res.json({ sessionData: req.session });
-});
 
 
 app.get('/api/users', (req, res) => {
@@ -96,7 +81,7 @@ app.use('/api', petController);
 app.use('/api', servicesController);
 app.use('/api', adminController);
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
