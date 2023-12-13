@@ -10,10 +10,7 @@ const app = express();
 
 // import servicesController from './src/controllers/servicesController.js'
 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
-app.use(bodyParser.json());
 
 
 // Serve your static files (e.g., your frontend build)
@@ -54,11 +51,11 @@ app.use(
 );
 
 // Your controllers import statements
-import userController from './src/controllers/userController.js';
-import petController from './src/controllers/petController.js';
-import servicesController from './src/controllers/servicesController.js';
 import adminController from './src/controllers/adminController.js';
 import appointmentController from './src/controllers/appointmentController.js';
+import petController from './src/controllers/petController.js';
+import servicesController from './src/controllers/servicesController.js';
+import userController from './src/controllers/userController.js';
 
 
 // Routes

@@ -101,7 +101,7 @@ MyApp.getInitialProps = async (event: AppContext) => {
       },
     });
     const petDetails = petDetailsRes.data;
-
+    console.log(petDetails)
     if (petDetails.length < 1 && ctx.pathname !== "/pet-details") {
       res.writeHead(307, { Location: "/pet-details" });
       res.end();
