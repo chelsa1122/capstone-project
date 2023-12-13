@@ -465,8 +465,6 @@ function GroomingList() {
               />
             ) : (<Typography>Something went wrong</Typography>)}
           </AppointmentDialog>  
-        
-        <Footer />
     </Box>
   );
 }

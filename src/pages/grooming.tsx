@@ -238,7 +238,6 @@ function Grooming() {
         <Stack justifyContent="center" alignItems="center" mt={5} color="#616161">
             <Typography variant="h4">FAQs</Typography>
         </Stack>
-        <Footer />
     </Box>
   );
 }

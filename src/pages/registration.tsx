@@ -20,12 +20,13 @@ import AuthHero from "@/components/AuthHero";
 import { useRouter } from "next/router";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
+import urls from "../constants/urls";
 
 const RegistrationPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [registerStatus, setRegisterStatus] = useState<any>(null);
+  const [registerStatus, setRegisterStatus] = useState({});
   const router = useRouter();
   const matches = useMediaQuery("(min-width:600px)");
 
@@ -36,11 +37,11 @@ const RegistrationPage = () => {
       email: email,
       password: password,
     };
-    setRegisterStatus(null);
+    setRegisterStatus({});
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/createUser",
+        `${urls.apiHost}/createUser`,
         userData
       );
 
@@ -107,7 +108,7 @@ const RegistrationPage = () => {
             <Typography variant="h5">Create Account</Typography>
           </Stack>
 
-          {registerStatus && (
+          {registerStatus && (registerStatus.success || registerStatus.error) && (
             <Alert
               sx={{
                 mx: "auto",
@@ -183,7 +184,7 @@ const RegistrationPage = () => {
           }}
           variant="contained"
           color="primary"
-          type="submit"
+          onClick={handleCreateUser}
         >
           Sign Up
         </Button>
