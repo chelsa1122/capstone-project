@@ -22,7 +22,7 @@ function setupUserTable(){
 
 function setupPetTable(){
 	return new Promise((resolve, reject) => {
-		db.query("CREATE TABLE IF NOT EXISTS pets (id INT AUTO_INCREMENT PRIMARY KEY, name varchar(255) NOT NULL, date_of_birth DATE NOT NULL, weight Decimal(10,2) NOT NULL)", function(error, results, fields)
+		db.query("CREATE TABLE IF NOT EXISTS pets (id INT AUTO_INCREMENT PRIMARY KEY, name varchar(255) NOT NULL, dob DATE NOT NULL, weight Decimal(10,2) NOT NULL, user_id INT, FOREIGN KEY (user_id) references user(id) ON DELETE CASCADE ON UPDATE CASCADE)", function(error, results, fields)
 		{
 			if(error!=null){
 				console.error("Error migrating table \"pets\": " + error);
