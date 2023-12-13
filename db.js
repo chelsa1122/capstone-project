@@ -1,12 +1,18 @@
 import mysql from 'mysql';
-
 const db = mysql.createConnection({
-  host: 'sql5.freemysqlhosting.net',
-  user: 'sql5668092',
-  password: 'GQE5XmGPIr',
+  host: '127.0.0.1',
+  user: 'root',
+  password: '',
   port: '3306',
-  database: 'sql5668092',
+  database: 'petpal',
 });
+// const db = mysql.createConnection({
+//   host: 'sql5.freemysqlhosting.net',
+//   user: 'sql5668092',
+//   password: 'GQE5XmGPIr',
+//   port: '3306',
+//   database: 'sql5668092',
+// });
 
 db.connect((err) => {
   if (err) {

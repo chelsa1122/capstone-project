@@ -1,34 +1,188 @@
+import React, { useState } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardMedia,
   Chip,
+  CircularProgress,
   Grid,
+  IconButton,
   Rating,
   Stack,
+  TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Footer from "./Footer";
+import { Search } from "@mui/icons-material";
+import Navbar from "@/components/Navbar";
 
 const StyledRating = styled(Rating)({
   "& .MuiRating-iconFilled": {
     color: "#ff6d75",
   },
-  "& .MuiRating-iconHover": {
-    color: "#ff3d47",
-  },
+  //   "& .MuiRating-iconHover": {
+  //     color: "#ff3d47",
+  //   },
 });
 function Homepage() {
-  const value = 5;
+  const [formValues, setFormValues] = useState({
+    Address: "",
+    PetService: "",
+    Date: "",
+    PetNumber: "",
+  });
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchClicked, setSearchClicked] = useState(false);
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setSearchClicked(true);
+    // fetch searchbar data
+    const { Address, PetService, Date, PetNumber } = formValues;
+    console.log(Address, PetService, Date, PetNumber);
+    setLoading(true);
+    setResults([]);
+    fetch("http://localhost:3001/api/services/" + Address, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setResults(data);
+        // Handle the data from the response
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
 
   return (
     <>
-      <Stack spacing={2}>
-        <img src="/Images/HomePage_Img.svg" />
+      <Navbar />
+      <Stack justifyContent="center" alignItems="center">
+        <img src="/Images/HomePage_Img.svg" width="100%" alt="HomePage Image" />
+
+        <Box
+          sx={{
+            backgroundColor: "#FAFAFA",
+            borderRadius: 2,
+            mt: -5,
+            p: 2,
+            maxWidth: "md",
+            mx: "auto",
+          }}
+        >
+          <form onSubmit={handleFormSubmit}>
+            <Grid
+              container
+              spacing={3}
+              justifyContent="center"
+              alignItems="center"
+              // component="form"
+            >
+              <Grid item xs={12} md={3} display="flex" flexDirection="column">
+                <Typography>Location</Typography>
+                <TextField
+                  name="Address"
+                  placeholder="Enter address or suburb"
+                  value={formValues.Address}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.5} display="flex" flexDirection="column">
+                <Typography>Service</Typography>
+                <TextField
+                  name="PetService"
+                  placeholder="Choose a pet service"
+                  value={formValues.PetService}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.5} display="flex" flexDirection="column">
+                <Typography>Dates</Typography>
+                <TextField
+                  name="Date"
+                  placeholder="Add Date"
+                  value={formValues.Date}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.5} display="flex" flexDirection="column">
+                <Typography>Pets</Typography>
+                <TextField
+                  name="PetNumber"
+                  placeholder="How many pets?"
+                  value={formValues.PetNumber}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                alignItems="center"
+                md={1}
+                display="flex"
+                flexDirection="column"
+              >
+                {!isSmallScreen ? (
+                  <IconButton
+                    type="submit"
+                    size="large"
+                    sx={{ backgroundColor: "#3F51B5" }}
+                  >
+                    <Search sx={{ color: "white" }} />
+                  </IconButton>
+                ) : (
+                  <Button variant="contained" type="submit" color="primary">
+                    Search
+                  </Button>
+                )}
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
+      </Stack>
+
+      <Stack>
+        {loading && <CircularProgress />}
+
+        {!loading && searchClicked && results.length === 0 && "No Results."}
+        <Grid container>
+          {results.map((result) => (
+            <Grid item md={4}>
+              <Card sx={{ width: "100%", background: "grey" }}>
+                <CardMedia sx={{ height: "200px" }}></CardMedia>
+                <CardContent sx={{ background: "#fff" }}>
+                  <Typography variant="h5">
+                    {result.service_location}
+                  </Typography>
+                  <Typography variant="h6">{result.service}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       </Stack>
 
       <Stack alignItems="center" mt={5}>
@@ -110,12 +264,13 @@ function Homepage() {
           sx={{
             display: "flex",
             maxWidth: { xs: "90%", md: "80%" },
-            flexDirection: { xs: "column", md: "row" }, // Change flex direction based on screen size
+            flexDirection: { xs: "column", md: "row" },
 
             mt: 5,
             mb: 5,
             backgroundColor: "#FDD1C3",
             borderRadius: 5,
+            
           }}
         >
           <Box sx={{ display: "flex", flexDirection: "column", p: 2 }}>
@@ -141,7 +296,7 @@ function Homepage() {
             <StyledRating
               defaultValue={5}
               name="read-only"
-              value={value}
+              // value={value}
               readOnly
               icon={<FavoriteIcon fontSize="inherit" />}
               emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
@@ -151,7 +306,7 @@ function Homepage() {
             component="img"
             sx={{ width: { md: "50%", xs: "100%" } }}
             image="/Images/CardImage.svg"
-            alt="Live from space album cover"
+            alt="CardImage"
           />
         </Card>
       </Stack>
@@ -166,3 +321,4 @@ function Homepage() {
 }
 
 export default Homepage;
+
