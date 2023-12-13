@@ -1,5 +1,5 @@
 const urls = {
-  apiHost: `http://localhost:3001/api`,
+  apiHost: `https://capstone-project-production-913a.up.railway.app/api`,
 };
 
 export default urls;
