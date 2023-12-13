@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "concurrently \"nodemon app.js\"  \"next dev\" ",
     "start": "node app.js",
-    "start-frontend": "next dev",
     "migrate": "node migrate.js",
     "seed": "node seed_data.js",
     "test": "echo \"Error: no test specified\" && exit 1"
