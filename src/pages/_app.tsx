@@ -9,7 +9,7 @@ import { Provider, useStore } from "jotai";
 import App, { AppContext, AppProps } from "next/app";
 import Head from "next/head";
 
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true; // whatever data is passed, will be passed with cookies
 
 const InitializeAtom = ({
   children,
