@@ -4,6 +4,7 @@ import StepDescription from "@/components/StepDescription";
 import CalendarIcon from "@/components/CalendarIcon";
 import GroomingResultItem from "@/components/GroomingResultItem";
 import AppointmentDialog from "@/components/AppointmentDialog";
+import LoginPopupForm from "@/components/LoginPopupForm";
 
 import {
   Alert,
@@ -15,6 +16,8 @@ import {
   CardMedia,
   Chip,
   Container,
+  Dialog,
+  DialogContent,
   Divider,
   Grid,
   IconButton,
@@ -32,7 +35,14 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Footer from "./Footer";
 import { useRouter } from 'next/router'
+import urls from "../constants/urls";
+import axios from "axios";
 
+async function isUserAuthenticated(){
+  const response = await axios.get(`${urls.apiHost}/isLoggedIn`);
+  console.log("RES", response);
+  return response.data.loggedIn === true;
+}
 
 function getServices(address){
     return fetch("http://localhost:3001/api/services/" + address, {
@@ -202,6 +212,7 @@ function AppointmentForm({serviceId, title, imageUri, addr, price, showNextDays,
  * */
 function GroomingList() {
     const [openAddressForm, setOpenAddressForm] = useState(false);
+    const [openLoginModal, setOpenLoginModal] = useState(false);
     const [statusText, setStatusText] = useState({
       show: false,
       message: "",
@@ -277,10 +288,16 @@ function GroomingList() {
     const closeAppointmentDialog = ()=>{
       setOpenAddressForm(false);
     };
-    const handleAppointmentClick = (appointmentResult) => {
+    const handleAppointmentClick = async (appointmentResult) => {
         console.log("Clicked ", appointmentResult);
-        setOpenAddressForm(true);
         setClickedResult(appointmentResult);
+        if(await isUserAuthenticated()){
+          setOpenAddressForm(true);
+          setClickedResult(appointmentResult);    
+        }
+        else{
+          setOpenLoginModal(true);
+        };
     };
 
     const closeStatusText = ()=>{
@@ -290,7 +307,12 @@ function GroomingList() {
         className: "",
         severity: "",
       });
-    }
+    };
+
+    const handleLoginModalClose = ()=>{
+      setOpenLoginModal(false);
+    };
+
     const handleAppointmentRequestComplete = (requestResult) => {
       setOpenAddressForm(false);
       if(requestResult.status == "success"){
@@ -358,7 +380,7 @@ function GroomingList() {
                     price={result.price_per_session}
                     timing={result.posted_timing}
                     rating={result.rating}
-                    onBookAppointmentClick={(e)=>{handleAppointmentClick(result)}}
+                    onBookAppointmentClick={async (e)=>{await handleAppointmentClick(result)}}
                 />                
             </Box>
         );
@@ -450,6 +472,11 @@ function GroomingList() {
             <Grid item xs={2} sm={3} md={4} display="flex" flexDirection="column">
             </Grid>
         </Grid>
+          <AppointmentDialog open={openLoginModal} handleClose={handleLoginModalClose}>
+              <LoginPopupForm 
+                redirectUri={`/GroomingList?loc=${encodeURIComponent(formValues.Address)}`}
+              />
+          </AppointmentDialog>
           <AppointmentDialog open={openAddressForm} handleClose={closeAppointmentDialog} >
             {clickedResult.id !=null ? (
               <AppointmentForm 
@@ -465,6 +492,7 @@ function GroomingList() {
               />
             ) : (<Typography>Something went wrong</Typography>)}
           </AppointmentDialog>  
+          
     </Box>
   );
 }
