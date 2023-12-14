@@ -131,10 +131,15 @@ const logout = (req, res) => {
   });
 };
 
+const isLoggedIn = (req, res) => {
+  return res.status(200).json({loggedIn: req.session.user != null});
+}
+
 // Define the API routes
 // router.post('/api/createUser', createUser);
 router.post("/login", loginUser);
 router.put("/updateUser", updateUser);
 router.get("/logout", logout);
+router.get("/isLoggedIn", isLoggedIn);
 
 export default router;
