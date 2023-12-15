@@ -36,16 +36,14 @@ app.use(
 
 app.use(bodyParser.json());
 
-// Enable CORS for all routes
-<<<<<<< HEAD
-app.use(cors({
-  origin: 'http://localhost:3001', // Replace with your frontend URL
-=======
+
 const corsOptions = {
   origin: true,
->>>>>>> 5da35b4548ec7a28e2fbd6c732d849f8460bd790
   credentials: true,
-}));
+};
+// Enable CORS for all routes
+
+app.use(cors(corsOptions));
 // Serve your static files (e.g., your frontend build)
 app.use(
   express.static(
