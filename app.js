@@ -40,12 +40,10 @@ app.use(
 app.use(bodyParser.json());
 
 // Enable CORS for all routes
-const corsOptions = {
-  origin: ['http://localhost:3001/', 'http://localhost:3000'],
+app.use(cors({
+  origin: 'http://localhost:3001', // Replace with your frontend URL
   credentials: true,
-};
-
-app.use(cors(corsOptions));
+}));
 // Serve your static files (e.g., your frontend build)
 app.use(
   express.static(
@@ -95,7 +93,7 @@ app.use("/api", servicesController);
 app.use("/api", appointmentController);
 app.use("/api", adminController);
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

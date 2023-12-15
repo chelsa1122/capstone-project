@@ -19,9 +19,10 @@ const LoginPage = () => {
         username: username,
         password: password,
       });
-      
+      console.log(response);
       if (response.status === 200) {
         // Admin login successful
+        console.log('test');
         setLoginStatus({ success: true });
         // Redirect to admin panel or perform other actions
         router.push('/UserList');

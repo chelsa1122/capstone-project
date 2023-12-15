@@ -20,7 +20,7 @@ const getAllUsers = (req, res) => {
 // Function to get a user by ID
 const getUserById = (req, res) => {
   const userId = req.params.id;
-  const query = 'SELECT * FROM users WHERE id = ?';
+  const query = 'SELECT * FROM user WHERE id = ?';
 
   db.query(query, [userId], (error, results) => {
     if (error) {
@@ -40,14 +40,10 @@ const getUserById = (req, res) => {
 // Function to update a user by ID
 const updateUserById = (req, res) => {
   const userId = req.params.id;
-  const { name, email, password } = req.body;
+  const { name, email, address } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required' });
-  }
-
-  const updateQuery = 'UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?';
-  const updateValues = [name, email, password, userId];
+  const updateQuery = 'UPDATE user SET name = ?, email = ?, address = ? WHERE id = ?';
+  const updateValues = [name, email, address, userId];
 
   db.query(updateQuery, updateValues, (updateError, updateResult) => {
     if (updateError) {
@@ -66,7 +62,7 @@ const updateUserById = (req, res) => {
 // Function to delete a user by ID
 const deleteUserById = (req, res) => {
   const userId = req.params.id;
-  const deleteQuery = 'DELETE FROM users WHERE id = ?';
+  const deleteQuery = 'DELETE FROM user WHERE id = ?';
 
   db.query(deleteQuery, [userId], (deleteError, deleteResult) => {
     if (deleteError) {
@@ -85,7 +81,7 @@ const deleteUserById = (req, res) => {
 // Function for admin login
 const loginAdmin = (req, res) => {
   const { username, password } = req.body;
-
+console.log(username);
   // Check if the provided username and password are correct
   if (username === 'admin' && password === 'admin@123') {
     // Set a session variable to indicate that the admin is logged in
@@ -97,16 +93,24 @@ const loginAdmin = (req, res) => {
   }
 };
 
+const logoutAdmin = (req, res) => {
+  // Clear the adminLoggedIn session variable to indicate logout
+  req.session.adminLoggedIn = false;
+
+  return res.status(200).json({ message: 'Admin logout successful' });
+};
+
 // Export the functions
-export { getAllUsers, getUserById, loginAdmin };
+export { getAllUsers, getUserById, loginAdmin, logoutAdmin };
 
 
 // Define the API routes for users
 router.get('/admin/login', loginAdmin);
 router.post('/admin/login', loginAdmin);
+router.post('/admin/logout', logoutAdmin);
 router.get('/admin/users', getAllUsers);
 router.get('/users/:id', getUserById);
-router.put('/users/:id', updateUserById);
+router.put('/admin/users/:id', updateUserById);
 router.delete('/users/:id', deleteUserById);
 
 // Function to get all pets
@@ -212,7 +216,7 @@ const deletePetById = (req, res) => {
 };
 
 // Define the API routes for pets
-router.get('/pets', getAllPets);
+router.get('/admin/pets', getAllPets);
 router.get('/pets/:id', getPetById);
 router.post('/pets', createPet);
 router.put('/pets/:id', updatePetById);
