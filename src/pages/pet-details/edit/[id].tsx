@@ -1,4 +1,5 @@
 import urls from "@/constants/urls";
+import { BreakfastDiningOutlined } from "@mui/icons-material";
 import {
   Button,
   Checkbox,
@@ -18,10 +19,12 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import axios from "axios";
+import { GetServerSidePropsContext } from "next";
 import Router from "next/router";
 import { useState } from "react";
 
-function PetDetails() {
+function PetDetails(props) {
+  const { petDetails } = props;
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
 
@@ -114,17 +117,17 @@ function PetDetails() {
   const years = Array.from({ length: 100 }, (_, index) => `${2023 - index}`);
   const months = Array.from({ length: 12 }, (_, index) => `${index + 1}`);
   const days = Array.from({ length: 31 }, (_, index) => `${index + 1}`);
-
-  const [name, setName] = useState("");
+  const [name, setName] = useState(petDetails.name);
   const [dob, setDob] = useState({
-    year: "",
-    month: "",
-    day: "",
+    year: new Date(petDetails.dob).getFullYear(),
+    month: new Date(petDetails.dob).getMonth(),
+    day: new Date(petDetails.dob).getDay(),
   });
-  const [weight, setWeight] = useState("");
-
-  const [selectedState, setSelectedState] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
+  const [weight, setWeight] = useState(petDetails.weight);
+  const [breed, setBreed] = useState(petDetails.breed);
+  const [selectedState, setSelectedState] = useState(petDetails.state);
+  const [selectedCity, setSelectedCity] = useState(petDetails.city);
+  const [gender, setGender] = useState(petDetails.gender);
 
   const handleStateChange = (event: { target: { value: any } }) => {
     const newState = event.target.value;
@@ -138,13 +141,18 @@ function PetDetails() {
         component="form"
         onSubmit={async (e) => {
           e.preventDefault();
-
-          const res = await axios.post(`${urls.apiHost}/createPetDetail`, {
+          // name, dob, weight, state, city, gender, breed
+          const res = await axios.put(`${urls.apiHost}/updatePetDetails`, {
             name: name,
             dob: `${dob.year}-${dob.month}-${dob.day}`,
             weight: 180,
+            pet_id: petDetails.id,
+            city: selectedCity,
+            state: selectedState,
+            breed,
+            gender,
           });
-          res.status === 201 && Router.push("/");
+          res.status === 200 && Router.push("/profile");
         }}
         item
         md={6}
@@ -182,6 +190,7 @@ function PetDetails() {
               onChange={(e) => {
                 setName(e.target.value);
               }}
+              value={name}
               label="Enter pet's name"
               variant="outlined"
             />
@@ -190,6 +199,7 @@ function PetDetails() {
             <Select
               label="Select State"
               variant="outlined"
+              value={selectedState}
               onChange={handleStateChange}
             >
               {canadianProvinces.map((province, index) => (
@@ -222,6 +232,7 @@ function PetDetails() {
               <Select
                 placeholder="Select Year"
                 variant="outlined"
+                value={dob.year}
                 onChange={(e) =>
                   setDob({
                     ...dob,
@@ -237,6 +248,7 @@ function PetDetails() {
                 ))}
               </Select>
               <Select
+                value={dob.month}
                 placeholder="Select Month"
                 variant="outlined"
                 onChange={(e) =>
@@ -254,6 +266,7 @@ function PetDetails() {
                 ))}
               </Select>
               <Select
+                value={dob.day}
                 onChange={(e) =>
                   setDob({
                     ...dob,
@@ -273,7 +286,12 @@ function PetDetails() {
             </Stack>
             <FormControl component="fieldset">
               <Typography component="legend">Gender</Typography>
-              <RadioGroup row name="gender">
+              <RadioGroup
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                row
+                name="gender"
+              >
                 {["male", "female"].map((gender) => (
                   <FormControlLabel
                     key={gender}
@@ -286,7 +304,12 @@ function PetDetails() {
             </FormControl>
 
             <Typography>Breed</Typography>
-            <TextField label="Enter pet's breed" variant="outlined" />
+            <TextField
+              value={breed}
+              onChange={(e) => setBreed(e.target.value)}
+              label="Enter pet's breed"
+              variant="outlined"
+            />
           </Stack>
           <Button
             type="submit"
@@ -316,5 +339,56 @@ function PetDetails() {
     </Grid>
   );
 }
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const { req, params } = context;
+
+  const user = await axios.get(`${urls.apiHost}/check-session`, {
+    headers: {
+      Cookie: req?.headers.cookie,
+    },
+  });
+
+  if (!user.data.userData) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  if (user.data.userData) {
+    const petDetailsRes = await axios.get(`${urls.apiHost}/getPetDetails`, {
+      headers: {
+        Cookie: req.headers.cookie,
+      },
+    });
+    const petDetails =
+      petDetailsRes.data.find((pet) => pet.id == params.id) || null;
+    console.log(petDetailsRes.data);
+    if (!petDetails) {
+      return {
+        redirect: {
+          destination: "/profile",
+          permanent: false,
+        },
+      };
+    }
+
+    return {
+      props: {
+        petDetails,
+        user: user.data.userData,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};
 
 export default PetDetails;

@@ -161,7 +161,7 @@ const UserDropdown = () => {
         <MenuItem
           sx={{ py: 2 }}
           onClick={async () => {
-            const res = await fetch("/api/auth/logout", {
+            const res = await fetch("/api/logout", {
               credentials: "include",
             });
             const data = await res.json();

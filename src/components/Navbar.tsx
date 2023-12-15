@@ -1,4 +1,5 @@
 import { userAtom } from "@/atoms";
+import urls from "@/constants/urls";
 import AdbIcon from "@mui/icons-material/Adb";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
@@ -35,11 +36,10 @@ const Navbar = () => {
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    const res = await fetch("/api/logout", {
+    const res = await fetch(`${urls.apiHost}/logout`, {
       credentials: "include",
     });
-    const data = await res.json();
-    router.push("/?logout=true");
+    window.location.href = "/?logout=true";
     handleClose();
   };
 

@@ -48,7 +48,7 @@ const LoginPage = () => {
     } catch (error) {
       setLoginStatus({
         error: true,
-        errorDescription: "An unknown error occurred",
+          errorDescription: "Invalid email or password",
       });
     }
   };

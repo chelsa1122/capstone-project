@@ -1,17 +1,16 @@
 import express from "express";
 import db from "../../db.js";
-import session from "express-session";
 
 const router = express.Router();
 
 // Function to create a new pet detail
 const createPetDetail = (req, res) => {
-  const { name, dob, weight } = req.body;
+  const { name, dob, weight, state, city, gender, breed } = req.body;
 
-  if (!name || !dob || !weight) {
+  if (!name || !dob || !weight || !state || !city || !gender || !breed) {
     return res
       .status(400)
-      .json({ error: "Name, date of birth, and weight are required" });
+      .json({ error: "Name, date of birth, weight, state, city, gender and breed are required" });
   }
 
   // Assuming there's a 'user_id' in the session representing the logged-in user
@@ -21,8 +20,8 @@ const createPetDetail = (req, res) => {
   // const userId = 1;
 
   const insertQuery =
-    "INSERT INTO pets (user_id, name, dob, weight) VALUES (?, ?, ?, ?)";
-  const insertValues = [userId, name, dob, weight];
+    "INSERT INTO pets (user_id, name, dob, weight, state, city, gender, breed) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+  const insertValues = [userId, name, dob, weight,state, city, gender, breed];
 
   db.query(insertQuery, insertValues, (insertError, insertResult) => {
     if (insertError) {
@@ -86,9 +85,9 @@ const deletePetDetail = (req, res) => {
 
 // Function to update pet details
 const updatePetDetails = (req, res) => {
-  const { name, dob, weight } = req.body;
+  const { name, dob, weight, state, city, gender, breed } = req.body;
 
-  if (!name && !dob && !weight) {
+  if (!name && !dob && !weight && !state && !city && !gender && !breed) {
     return res.status(400).json({ error: "No fields to update provided" });
   }
 
@@ -120,6 +119,27 @@ const updatePetDetails = (req, res) => {
   if (weight) {
     updateQuery += "weight = ?, ";
     updateValues.push(weight);
+  }
+
+  if (city) {
+    updateQuery += "city = ?, ";
+    updateValues.push(city);
+  }
+  
+  if (gender) {
+    updateQuery += "gender = ?, ";
+    updateValues.push(gender);
+  }
+  
+  if (breed) {
+    updateQuery += "breed = ?, ";
+    updateValues.push(breed);
+  }
+  
+    
+  if (state) {
+    updateQuery += "state = ?, ";
+    updateValues.push(state);
   }
 
   updateQuery = updateQuery.slice(0, -2); // Remove the trailing comma and space

@@ -17,22 +17,34 @@ function Profile({ petDetails, user }) {
       <Typography p={3} variant="h4">
         My Profile
       </Typography>
-      <Card container spacing={2}>
-        <p> Email: {user.email}</p>
+      <Card container sx={{ ml: 3, p: 3 }} spacing={2}>
+        <Typography variant="h6">Email</Typography>
+        <p>{user.email}</p>
       </Card>
       <Typography p={3} variant="h4">
         My Pets
       </Typography>
-      <Button LinkComponent={Link} href='/pet-details' variant="contained" color="primary">
+      <Button
+        LinkComponent={Link}
+        href="/pet-details"
+        variant="contained"
+        color="primary"
+        sx={{ ml: 3, width: "10rem" }}
+      >
         Add
       </Button>
       <Grid container p={3} gap={3}>
         {petDetails?.map((pet) => (
-          <Grid component={Card} item>
+          <Grid component={Card} boxShadow={4} item>
             <CardContent>
               <Typography variant="h5">{pet.name}</Typography>
               <p>DOB: {new Date(pet.dob).toDateString()}</p>
-              <p>Weight: {pet.weight} lb</p>
+              <p>Breed: {pet.breed}</p>
+              <p>Location: {pet.city}, {pet.state}</p>
+              <p>
+                
+              </p>
+              {/* <p>Weight: {pet.weight} lb</p> */}
               <Button
                 onClick={() => {
                   axios
@@ -45,6 +57,15 @@ function Profile({ petDetails, user }) {
                 color="error"
               >
                 Remove
+              </Button>
+              <Button
+                component={Link}
+                href={`/pet-details/edit/${pet.id}`}
+                variant="contained"
+                color="success"
+                sx={{ marginLeft: 2 }}
+              >
+                Edit
               </Button>
             </CardContent>
           </Grid>
