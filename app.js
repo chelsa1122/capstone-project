@@ -10,10 +10,7 @@ const app = express();
 
 // import servicesController from './src/controllers/servicesController.js'
 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
-app.use(bodyParser.json());
 
 
 // Serve your static files (e.g., your frontend build)
@@ -40,8 +37,13 @@ app.use(
 app.use(bodyParser.json());
 
 // Enable CORS for all routes
+<<<<<<< HEAD
 app.use(cors({
   origin: 'http://localhost:3001', // Replace with your frontend URL
+=======
+const corsOptions = {
+  origin: true,
+>>>>>>> 5da35b4548ec7a28e2fbd6c732d849f8460bd790
   credentials: true,
 }));
 // Serve your static files (e.g., your frontend build)
@@ -52,11 +54,11 @@ app.use(
 );
 
 // Your controllers import statements
-import userController from './src/controllers/userController.js';
-import petController from './src/controllers/petController.js';
-import servicesController from './src/controllers/servicesController.js';
 import adminController from './src/controllers/adminController.js';
 import appointmentController from './src/controllers/appointmentController.js';
+import petController from './src/controllers/petController.js';
+import servicesController from './src/controllers/servicesController.js';
+import userController from './src/controllers/userController.js';
 
 
 // Routes

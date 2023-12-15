@@ -41,26 +41,15 @@ function Homepage() {
   const [searchClicked, setSearchClicked] = useState(false);
 
   const handleFormSubmit = (e) => {
-    e.preventDefault();
-    setSearchClicked(true);
-    // fetch searchbar data
-    const { Address, PetService, Date, PetNumber } = formValues;
-
-    setLoading(true);
-    setResults([]);
-
-    fetch(`${urls.apiHost}/services/` + Address)
-      .then((response) => response.json())
-      .then((data) => {
-        setResults(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+        e.preventDefault();
+        const { Address, PetService, Date, PetNumber } = formValues;
+        if(Address.trim().length == 0){
+            return;
+        }
+        else{
+            window.location.href = `/GroomingList?loc=${encodeURIComponent(Address)}`;
+        }
+    };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

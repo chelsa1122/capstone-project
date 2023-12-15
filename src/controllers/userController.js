@@ -31,10 +31,13 @@ router.post("/createUser", async (req, res) => {
 
     const user = { name, email, password };
     const insertQuery = "INSERT INTO user SET ?";
-    const insertResult = await db.query(insertQuery, user);
+    const insertResult = await db.promise().query(insertQuery, user);
 
     // Store user data in the session
-    req.session.user = user;
+    req.session.user = {
+      email: user.email,
+      user_id: insertResult[0].insertId
+    };
 
     console.log("User inserted:", insertResult);
     return res.status(201).json({ message: "User created successfully" });
@@ -128,10 +131,15 @@ const logout = (req, res) => {
   });
 };
 
+const isLoggedIn = (req, res) => {
+  return res.status(200).json({loggedIn: req.session.user != null});
+}
+
 // Define the API routes
 // router.post('/api/createUser', createUser);
 router.post("/login", loginUser);
 router.put("/updateUser", updateUser);
 router.get("/logout", logout);
+router.get("/isLoggedIn", isLoggedIn);
 
 export default router;

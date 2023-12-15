@@ -2,7 +2,7 @@ import { Stack, Typography, useMediaQuery } from "@mui/material";
 import Image from "next/image";
 
 function AuthHero() {
-  const matches = useMediaQuery('(min-width:600px)');
+  const matches = useMediaQuery("(min-width:600px)");
   return (
     <div
       style={{
@@ -21,9 +21,10 @@ function AuthHero() {
       <Stack paddingLeft={10} paddingRight={10} direction="column">
         <Typography
           color="#FFFFFF"
-          marginTop="20%"
+          marginTop="10%"
           variant="h5"
           textAlign="left"
+          sx={{ zIndex: 111 }}
         >
           {" "}
           🐾 Are you a dog lover? Join our pack and embark on a journey filled
@@ -35,8 +36,8 @@ function AuthHero() {
           style={{
             position: "absolute",
             bottom: "0",
-            left: matches ? "17%" : "0",
-            width: matches ? "35%" : "100%", // Make the dog image smaller in mobile view
+            left: matches ? "19%" : "0",
+            width: matches ? "27%" : "100%", // Make the dog image smaller in mobile view
           }}
         />
       </Stack>

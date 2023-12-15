@@ -39,7 +39,7 @@ const createPetDetail = (req, res) => {
 const getPetDetails = (req, res) => {
   // Assuming there's a 'user_id' in the session representing the logged-in user
   const { user_id: userId } = req.session.user || {};
-
+  
   const selectQuery = "SELECT * FROM pets WHERE user_id = ?";
   const selectValues = [userId];
 

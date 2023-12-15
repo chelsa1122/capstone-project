@@ -1,4 +1,5 @@
 import AuthHero from "@/components/AuthHero";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -11,14 +12,12 @@ import {
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { useRouter } from "next/router";
-import { useState } from "react";
 import axios from "axios";
+import { useState } from "react";
 import urls from "../constants/urls";
 
 const LoginPage = () => {
@@ -26,7 +25,6 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loginStatus, setLoginStatus] = useState<any>(null);
-  const router = useRouter();
   const matches = useMediaQuery("(min-width:600px)");
 
   const handleLogin = async () => {

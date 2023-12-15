@@ -1,18 +1,21 @@
-import mysql from 'mysql';
-const db = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: '',
-  port: '3306',
-  database: 'petpal',
-});
+import { readFileSync, readSync } from 'fs';
+import mysql from 'mysql2';
 // const db = mysql.createConnection({
-//   host: 'sql5.freemysqlhosting.net',
-//   user: 'sql5668092',
-//   password: 'GQE5XmGPIr',
+//   host: '127.0.0.1',
+//   user: 'root',
+//   password: '',
 //   port: '3306',
-//   database: 'sql5668092',
+//   database: 'petpal',
 // });
+
+const db = mysql.createConnection({
+  host: 'pet-pal-jayswalstuti3-292f.a.aivencloud.com',
+  user: 'avnadmin',
+  password: 'AVNS_Ikm5j1UZjOoLYG8q4O5',
+  port: 22400,
+  database: 'defaultdb',
+  ssl:{ca:readFileSync('./ca.pem').toString(),rejectUnauthorized:true,}
+});
 
 db.connect((err) => {
   if (err) {

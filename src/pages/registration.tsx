@@ -20,6 +20,7 @@ import AuthHero from "@/components/AuthHero";
 import { useRouter } from "next/router";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
+import urls from "@/constants/urls";
 
 const RegistrationPage = () => {
   const [name, setName] = useState("");
@@ -40,7 +41,7 @@ const RegistrationPage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/createUser",
+        `${urls.apiHost}/createUser`,
         userData
       );
 
@@ -76,9 +77,9 @@ const RegistrationPage = () => {
       sx={{
         display: "flex",
         flexDirection: matches ? "row" : "column",
-        alignItems: "stretch",
+        alignItems: "stretch", // Stretch both sides vertically
         height: "100vh",
-        background: "#FFC900", 
+        background: "#FFC900", // Set the background color to yellow
       }}
     >
       {/* Left Side - Yellow */}
@@ -108,33 +109,17 @@ const RegistrationPage = () => {
           </Stack>
 
           {registerStatus && (
-            <Alert
-              sx={{
-                mx: "auto",
-              }}
-              color={registerStatus?.error ? "error" : "success"}
-            >
+            <Alert color={registerStatus?.error ? "error" : "success"}>
               {registerStatus?.success && "Registration successful"}
               {registerStatus?.errorDescription}
             </Alert>
           )}
           <TextField
-            sx={{
-              marginBottom: 5,
-              marginLeft: "auto",
-              marginRight: "auto",
-              width: "50%",
-            }} // Center the text field
+            autoFocus
             label="Full Name"
             onChange={(e) => setName(e.target.value)}
           />
           <TextField
-            sx={{
-              marginBottom: 5,
-              marginLeft: "auto",
-              marginRight: "auto",
-              width: "50%",
-            }} // Center the text field
             label="Email Address"
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -156,38 +141,21 @@ const RegistrationPage = () => {
               ),
             }}
           />
+          <Button
+            sx={{
+              marginTop: 3,
+              backgroundColor: "#3F51B5",
+            }}
+            variant="contained"
+            color="primary"
+            type="submit"
+          >
+            Sign Up
+          </Button>
+          <Button sx={{ mt: 2 }} href="/login">
+            Already have an account? Log in
+          </Button>
         </Stack>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          width="50%"
-          mx="auto"
-        >
-          <Grid item xs={6}>
-            <FormControlLabel control={<Checkbox />} label="Remember me" />
-          </Grid>
-          <Grid item xs={6}>
-            <Link href="#" sx={{ paddingRight: "20px" }}>
-              Forgot Password?
-            </Link>
-          </Grid>
-        </Stack>
-        <Button
-          sx={{
-            marginTop: 1,
-            marginLeft: "auto",
-            marginRight: "auto",
-            width: "50%",
-            backgroundColor: "#3F51B5",
-          }}
-          variant="contained"
-          color="primary"
-          type="submit"
-        >
-          Sign Up
-        </Button>
-        <Button href="/login">Already have an account? Log in</Button>
         <div style={{ flex: 1 }} /> {/* Spacer to push content to the center */}
       </Paper>
     </Box>

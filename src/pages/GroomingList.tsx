@@ -4,8 +4,11 @@ import StepDescription from "@/components/StepDescription";
 import CalendarIcon from "@/components/CalendarIcon";
 import GroomingResultItem from "@/components/GroomingResultItem";
 import AppointmentDialog from "@/components/AppointmentDialog";
+import LoginPopupForm from "@/components/LoginPopupForm";
 
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Card,
@@ -13,6 +16,8 @@ import {
   CardMedia,
   Chip,
   Container,
+  Dialog,
+  DialogContent,
   Divider,
   Grid,
   IconButton,
@@ -30,7 +35,14 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Footer from "./Footer";
 import { useRouter } from 'next/router'
+import urls from "../constants/urls";
+import axios from "axios";
 
+async function isUserAuthenticated(){
+  const response = await axios.get(`${urls.apiHost}/isLoggedIn`);
+  console.log("RES", response);
+  return response.data.loggedIn === true;
+}
 
 function getServices(address){
     return fetch("http://localhost:3001/api/services/" + address, {
@@ -39,6 +51,25 @@ function getServices(address){
             "Content-Type": "application/json",
           },
     }).then((response) => response.json());
+}
+
+function requestAppointment(serviceId, apptDate, apptTime){
+  var appointmentStartdate = new Date(
+    apptDate.getFullYear() +
+     "-" + apptDate.getMonth() + "-" + apptDate.getDate() +
+     " " + apptTime);
+  console.log(apptDate, apptTime, appointmentStartdate);
+  return fetch("http://localhost:3001/api/createAppointment", {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "serviceId": serviceId,
+        "appointmentStartDate": appointmentStartdate,}),
+      credentials: 'include',
+  }).then((response) => response.json());
 }
 
 function formatZip(zip){
@@ -51,7 +82,11 @@ function formatAddress(result){
   return `${result.street_address} ${result.service_location}, ${result.province}, ${formatZip(result.zip)}`;
 }
 
-function AppointmentForm({title, imageUri, addr, price, showNextDays, blockedSlots, onSubmit, onCancel}){
+/**
+ * APPOINTMENT FORM
+ * 
+ * */
+function AppointmentForm({serviceId, title, imageUri, addr, price, showNextDays, blockedSlots, onRequestComplete, onCancel, onSubmitFail}){
   const [formValues, setFormValues] = useState({
     appointmentDate: new Date(),
     time: "10:00 am"
@@ -61,11 +96,36 @@ function AppointmentForm({title, imageUri, addr, price, showNextDays, blockedSlo
   const times = am_times.concat(pm_times);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name} = e.target;
+    var value = null;
+    if(e.target.type == "date"){
+      value = e.target.valueAsDate;
+    }
+    if(value == null){value = e.target.value;}
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: value,
     }));
+  };
+
+  const trySubmitAppointment = (e) => {
+    e.preventDefault();
+    var apptDate = formValues.appointmentDate;  
+    var apptTime = formValues.time;
+    requestAppointment(serviceId, apptDate, apptTime)
+      .then((result)=>{
+        if(result.error){
+          console.error("appointment api error:", result.error);
+          throw new Error("Cannot complete request");
+        }
+        onRequestComplete(result);
+      })
+      .catch((err)=>{
+        console.error("Error booking appointment:", err);
+        if(onSubmitFail != null){
+          onSubmitFail(err);
+        }
+      });
   };
 
   return (
@@ -97,7 +157,7 @@ function AppointmentForm({title, imageUri, addr, price, showNextDays, blockedSlo
             </Stack>
         </Stack>
       </Stack>
-      <form onSubmit={(e)=>{e.preventDefault();onSubmit(e, formValues);}}>
+      <form onSubmit={trySubmitAppointment}>
         <Grid
            container
            spacing={3}
@@ -110,7 +170,7 @@ function AppointmentForm({title, imageUri, addr, price, showNextDays, blockedSlo
                   name="appointmentDate"
                   type="date"
                   placeholder="Enter appointment date"
-                  value={formValues.appointmentDate}
+                  value={formValues.appointmentDate.toISOString().split('T')[0]}
                   onChange={handleInputChange}
                 />
             </Grid>
@@ -135,7 +195,7 @@ function AppointmentForm({title, imageUri, addr, price, showNextDays, blockedSlo
         <Stack direction="row" justifyContent="end" spacing={3} sx={{marginTop: "2%"}}>
           <Button className="btn btn-primary" variant="contained"
               sx={{borderRadius:"10px"}}
-              onClick={(e)=>{e.preventDefault();onSubmit(e, formValues);}}
+              onClick={trySubmitAppointment}
           >Book Appointment</Button>
           <Button className="btn btn-secondary" variant="contained"
               sx={{borderRadius:"10px"}}
@@ -147,8 +207,18 @@ function AppointmentForm({title, imageUri, addr, price, showNextDays, blockedSlo
   );
 }
 
+/**
+ * GROOMING LIST
+ * */
 function GroomingList() {
     const [openAddressForm, setOpenAddressForm] = useState(false);
+    const [openLoginModal, setOpenLoginModal] = useState(false);
+    const [statusText, setStatusText] = useState({
+      show: false,
+      message: "",
+      className: "",
+      severity: "",
+    });
     const router = useRouter();
     const [formValues, setFormValues] = useState({
         Address:  router.query || "toronto",
@@ -164,7 +234,13 @@ function GroomingList() {
     const loadResults = function(addr){
       getServices(addr || formValues.Address)
         .then((data)=>{
-          setResults(data);
+          if(data == null || data.error){
+            console.log("get services returned:", data);
+            alert("Looks like there was a problem");
+          }
+          else{
+            setResults(data);
+          }
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -189,8 +265,11 @@ function GroomingList() {
         setResults([]);
         getServices(Address)
           .then((data)=>{
+            if(data == null || data.error){
+              console.log("get services returned:", data);
+              alert("Looks like there was a problem");
+            }
             setResults(data);
-            window.location.href.replace()
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -209,11 +288,57 @@ function GroomingList() {
     const closeAppointmentDialog = ()=>{
       setOpenAddressForm(false);
     };
-    const handleAppointmentClick = (appointmentResult) => {
+    const handleAppointmentClick = async (appointmentResult) => {
         console.log("Clicked ", appointmentResult);
-        setOpenAddressForm(true);
         setClickedResult(appointmentResult);
+        if(await isUserAuthenticated()){
+          setOpenAddressForm(true);
+          setClickedResult(appointmentResult);    
+        }
+        else{
+          setOpenLoginModal(true);
+        };
     };
+
+    const closeStatusText = ()=>{
+      setStatusText({
+        show: false,
+        message: "",
+        className: "",
+        severity: "",
+      });
+    };
+
+    const handleLoginModalClose = ()=>{
+      setOpenLoginModal(false);
+    };
+
+    const handleAppointmentRequestComplete = (requestResult) => {
+      setOpenAddressForm(false);
+      if(requestResult.status == "success"){
+        setStatusText({
+          show: true,
+          message: requestResult.message,
+          className: "success",
+          severity: "success",
+        });
+      }
+      else{
+        setStatusText({
+          show: true,
+          message: requestResult.message,
+          className: "danger",
+          severity: "error",
+        });
+      }
+      // setTimeout(()=>{
+      //   setStatusText({
+      //     show: false,
+      //     message: "",
+      //     className: "",
+      //   }, 3600);
+      // })
+    }
 
     // let results = [
     //     {
@@ -243,9 +368,6 @@ function GroomingList() {
             //   rating: 4,
             // },
     // ];
-
-    
-
     let resultItems = results.map((result, idx) => {
         return (
             <Box key={result.id}>
@@ -258,7 +380,7 @@ function GroomingList() {
                     price={result.price_per_session}
                     timing={result.posted_timing}
                     rating={result.rating}
-                    onBookAppointmentClick={(e)=>{handleAppointmentClick(result)}}
+                    onBookAppointmentClick={async (e)=>{await handleAppointmentClick(result)}}
                 />                
             </Box>
         );
@@ -320,6 +442,19 @@ function GroomingList() {
                 </form>
             </Box>
         </Box> 
+        <Box
+          sx={{width: "100%"}}
+        >
+          <Container>
+          {(statusText.show)?(
+              <Alert severity={statusText.severity} onClose={closeStatusText}>
+                
+                  <AlertTitle sx={{textTransform: "capitalize"}}>{statusText.severity}</AlertTitle>
+                  {statusText.message}
+              </Alert>
+          ):(<Box></Box>)}
+          </Container>
+        </Box>
         <Grid
             container
             spacing={3}
@@ -337,22 +472,27 @@ function GroomingList() {
             <Grid item xs={2} sm={3} md={4} display="flex" flexDirection="column">
             </Grid>
         </Grid>
+          <AppointmentDialog open={openLoginModal} handleClose={handleLoginModalClose}>
+              <LoginPopupForm 
+                redirectUri={`/GroomingList?loc=${encodeURIComponent(formValues.Address)}`}
+              />
+          </AppointmentDialog>
           <AppointmentDialog open={openAddressForm} handleClose={closeAppointmentDialog} >
             {clickedResult.id !=null ? (
               <AppointmentForm 
+                serviceId={clickedResult.id}
                 title={clickedResult.service}
                 imageUri={"/Images/grooming-results/" + clickedResult.imageName} 
                 price={clickedResult.price_per_session}
                 addr={formatAddress(clickedResult)}
                 showNextDays={14}
                 blockedSlots={[]}
-                onSubmit={closeAppointmentDialog}
+                onRequestComplete={handleAppointmentRequestComplete}
                 onCancel={closeAppointmentDialog}
               />
             ) : (<Typography>Something went wrong</Typography>)}
           </AppointmentDialog>  
-        
-        <Footer />
+          
     </Box>
   );
 }
